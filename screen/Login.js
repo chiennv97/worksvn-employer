@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import Icon from 'react-native-vector-icons/Entypo';
 import {Text, StyleSheet, View, Button} from 'react-native';
 export default class Login extends Component {
     render() {
@@ -9,6 +10,7 @@ export default class Login extends Component {
                 title="ĐĂNG NHẬP"
                 onPress={() => navigation.navigate("Home")}  
             />
+            <Icon name="mail" size={20} />
         </View>)
     }
 }

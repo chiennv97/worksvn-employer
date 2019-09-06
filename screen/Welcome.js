@@ -98,7 +98,7 @@ export default class Welcome extends Component {
                 <View style={{height: '35%'}}>
                     <Image
                     source={logo}
-                    resizeMode="center"
+                    resizeMode="contain"
                     style={styles.logo}
                     />
                 </View>

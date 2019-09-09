@@ -3,6 +3,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import { CheckBox, Button } from 'react-native-elements';
 import Icon2 from 'react-native-vector-icons/Entypo';
 import { connect } from 'react-redux';
+import RNPickerSelect from 'react-native-picker-select';
 // import base64 from 'react-native-base64';
 import { View, Text, Dimensions,
   Image, StyleSheet, TextInput, Picker, ScrollView, TouchableOpacity, SafeAreaView, StatusBar} from 'react-native';
@@ -16,15 +17,12 @@ class SignUp extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      candidateRegisterBody: {
-        lastName: null,
-        firstName: null,
-        gender: 0,
+      employerRegisterBody: {
+        employerName: null,
         phone: null,
         lat: null,
         lon: null,
       },
-      genderValue: 'Nữ',
       email: null,
       checked: false,
       password: null,
@@ -52,7 +50,7 @@ class SignUp extends Component {
     // .catch((error) => {
     //   console.error(error);
     // });
-    signUp(this.state.email, this.state.password, this, this.state.candidateRegisterBody);
+    signUp(this.state.email, this.state.password, this, this.state.employerRegisterBody);
 
   }
   checkEmail() {
@@ -79,40 +77,15 @@ class SignUp extends Component {
                         <Icon style={{ padding: 10 }} name="user" size={20} />
                         <TextInput
                             style={styles.input}
-                            placeholder="Họ (Đệm)"
+                            placeholder="Tên nhà tuyển dụng"
                             onChangeText={
-                              (lastName) => { this.state.candidateRegisterBody.lastName = lastName; }}
-                            underlineColorAndroid="transparent"
-                        />
-                      </View>
-                      <View style={styles.firstNameSection}>
-                        <TextInput
-                            style={styles.inputFirstName}
-                            placeholder="Tên"
-                            onChangeText={
-                              (firstName) => { this.state.candidateRegisterBody.firstName = firstName; }}
+                              (employerName) => { this.state.employerRegisterBody.employerName = employerName; }}
                             underlineColorAndroid="transparent"
                         />
                       </View>
                     </View>
-                    <View style={styles.gender}>
-                      <View>
-                        <Icon style={{ paddingLeft: 10 }} name="venus-mars" size={20} />
-                      </View>
-                      <Picker
-                        selectedValue={this.state.genderValue}
-                        style={{ height: 45, width: width - 50 }}
-                        onValueChange={(itemValue, itemIndex) => {
-                          this.state.candidateRegisterBody.gender = itemIndex;
-                          this.setState(
-                            { genderValue: itemValue });
-                        }}
-                      >
-                        <Picker.Item label="Nữ" value="Nữ" />
-                        <Picker.Item label="Nam" value="Nam" />
-                      </Picker>
-                    </View>
-                    {/* <TouchableOpacity onPress={() => this.props.navigation.navigate('GET_POSITION_SCREEN', {type: 'SEARCH_FILL' })}>
+                    
+                    <TouchableOpacity onPress={() => this.props.navigation.navigate('GET_POSITION_SCREEN', {type: 'SEARCH_FILL' })}>
                       <View style={styles.commonSection}>
                           <Icon2 style={{ padding: 10 }} name="home" size={20} />
                           <TextInput
@@ -140,7 +113,7 @@ class SignUp extends Component {
                       <TextInput
                           style={styles.input}
                           placeholder="Di động"
-                          onChangeText={(phone) => { this.state.candidateRegisterBody.phone = phone; }}
+                          onChangeText={(phone) => { this.state.employerRegisterBody.phone = phone; }}
                           underlineColorAndroid="transparent"
                       />
                     </View>
@@ -168,6 +141,7 @@ class SignUp extends Component {
                       title='Đồng ý với điều khoản của Works.vn'
                       checked={this.state.checked}
                       onPress={() => this.setState({ checked: !this.state.checked })}
+                      containerStyle={{backgroundColor: '#fff', borderColor: '#fff'}}
                     />
                     <View style={{ margin: 10 * SCALE_PADDING_OR_MARGIN }}>
                       <Button
@@ -207,7 +181,7 @@ class SignUp extends Component {
                     <View style={styles.haveAccount}>
                       <Text>Đã có tài khoản?</Text>
                       <Text style={{ paddingLeft: 10, color: '#e62e00' }}>Đăng nhập</Text>
-                    </View> */}
+                    </View>
                   </ScrollView>
                 </SafeAreaView>
       </React.Fragment>
@@ -272,8 +246,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#fff',
-    margin: 10 * SCALE_PADDING_OR_MARGIN
+    backgroundColor: '#E0E0E0',
+    margin: 10 * SCALE_PADDING_OR_MARGIN,
+    borderRadius: 5
   },
   haveAccount: {
     justifyContent: 'center',

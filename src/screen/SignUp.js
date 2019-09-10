@@ -85,7 +85,7 @@ class SignUp extends Component {
                       </View>
                     </View>
                     
-                    <TouchableOpacity onPress={() => this.props.navigation.navigate('GET_POSITION_SCREEN', {type: 'SEARCH_FILL' })}>
+                    <TouchableOpacity onPress={() => this.props.navigation.navigate('GetPosition', {type: 'SEARCH_FILL' })}>
                       <View style={styles.commonSection}>
                           <Icon2 style={{ padding: 10 }} name="home" size={20} />
                           <TextInput

@@ -8,6 +8,7 @@ import AuthLoadingScreen from '../screen/AuthLoadingScreen';
 import {height, width} from '../constants/dimenstion';
 import ForgotPassword from '../screen/ForgotPassword';
 import SignUp from '../screen/SignUp';
+import GetPosition from '../screen/GetPosition'
 // const Screens = createSwitchNavigator({
 //   Welcome,
 //   Login
@@ -99,7 +100,7 @@ const styles = StyleSheet.create({
 });
 
 const AppStack = createStackNavigator({ Home: HomeScreen, Other: OtherScreen });
-const AuthStack = createStackNavigator({ Welcome: Welcome, SignIn: Login, ForgotPassword: ForgotPassword, SignUp: SignUp },
+const AuthStack = createStackNavigator({ Welcome: Welcome, SignIn: Login, ForgotPassword: ForgotPassword, SignUp: SignUp, GetPosition: GetPosition },
   {
       initialRouteName: 'Welcome',
       headerMode: 'none',

@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import React, { Component } from 'react';
 import MapView, { Marker } from 'react-native-maps';
 import { View, Dimensions, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import {MAIN_COLOR, ROUTE_KEY, KEY_GOOGLE_MAP, UPDATE_POSITION} from '../../constants/Constants';
+import {MAIN_COLOR, ROUTE_KEY, KEY_GOOGLE_MAP} from '../constants/Constants';
 
 const { height, width } = Dimensions.get('window');
 
@@ -36,7 +36,7 @@ class GetPosition extends Component {
           .then((response) => response.json())
           .then((responseJson) => {
             console.log(responseJson);
-            this.props.dispatch({ type: UPDATE_POSITION,
+            this.props.dispatch({ type: 'UPDATE_POSITION',
                 lat: this.state.region.latitude,
                 lon: this.state.region.longitude,
                 addressStr: responseJson.results[0].formatted_address });

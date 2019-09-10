@@ -3,8 +3,9 @@ import {
     BASE_URL,
 } from '../constants/Url';
 import {strings} from '../constants/Strings';
-import alertMsgErrorCallApi from '../utils/alertMsgErrorCallApi';
+import {alertMsgErrorCallApi, alertMsgErrorCallApiString} from '../utils/alertMsgErrorCallApi';
 import {Alert} from 'react-native';
+import {EMPLOYERS_API} from '../constants/Constants'
 export function sendEmail( _email) {
     return new Promise((resolve, reject) => {
         console.log(`${BASE_URL.url_public}api/users/password/reset`);
@@ -15,7 +16,7 @@ export function sendEmail( _email) {
             .finish((err, res) => {
                 if (err) {
                     console.log(err);
-                    alertMsgErrorCallApi(res.statusCode, 'ForgotPasswordFunc.js - 17');
+                    alertMsgErrorCallApi(res, 'ForgotPasswordFunc.js - 17');
                     reject(res.statusCode);
                 } else {
                     Alert.alert(

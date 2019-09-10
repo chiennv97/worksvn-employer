@@ -2,7 +2,7 @@
   package="com.demo">
 
     <uses-permission android:name="android.permission.INTERNET" />
-
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <application
       android:name=".MainApplication"
       android:label="@string/app_name"
@@ -23,7 +23,7 @@
       <activity android:name="com.facebook.react.devsupport.DevSettingsActivity" />
       <meta-data
          android:name="com.google.android.geo.API_KEY"
-         android:value="AIzaSyDLXccLOfG32QTbLRt2wo3SmoL4ekO9vCQ"/>
+         android:value="AIzaSyBH3XpDDs01zBLosX1SRz7fHseqvFTW_XQ"/>
     </application>
 
 </manifest>

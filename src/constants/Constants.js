@@ -7,4 +7,4 @@ export const OAUTH2_API = 'oauth2/api/';
 export const CLIEN_ID = 'test';
 export const SECRET = 'test';
 export const SCALE_PADDING_OR_MARGIN = 1;
-export const KEY_GOOGLE_MAP = 'AIzaSyAc3xYjlLIZs6_Bugw3QiYJLiEJpD_dDCg';
+export const KEY_GOOGLE_MAP = 'AIzaSyBH3XpDDs01zBLosX1SRz7fHseqvFTW_XQ';

@@ -4,9 +4,10 @@ import { CheckBox, Button } from 'react-native-elements';
 import Icon2 from 'react-native-vector-icons/Entypo';
 import { connect } from 'react-redux';
 import RNPickerSelect from 'react-native-picker-select';
+import {strings} from '../constants/Strings';
 // import base64 from 'react-native-base64';
 import { View, Text, Dimensions,
-  Image, StyleSheet, TextInput, Picker, ScrollView, TouchableOpacity, SafeAreaView, StatusBar} from 'react-native';
+  Image, StyleSheet, TextInput, Alert, ScrollView, TouchableOpacity, SafeAreaView, StatusBar} from 'react-native';
 import HeaderScreenDetail from '../components/HeaderScreenDetail';
 import {SCALE_PADDING_OR_MARGIN, MAIN_COLOR } from '../constants/Constants';
 import { signUp } from '../action/AuthorAction';
@@ -17,12 +18,10 @@ class SignUp extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      employerRegisterBody: {
-        employerName: null,
-        phone: null,
-        lat: null,
-        lon: null,
-      },
+      employerName: null,
+      phone: null,
+      lat: null,
+      lon: null,
       email: null,
       checked: false,
       password: null,
@@ -30,27 +29,11 @@ class SignUp extends Component {
     };
   }
   onSubmit() {
-    // const Authorization = "Basic " + base64.encode(this.state.email + ':' + this.state.password);
-    // console.log('bat dau in');
-    // console.log(JSON.stringify(this.state.candidateRegisterBody));
-    // console.log(Authorization);
-    // fetch(`${SERVER}/api/candidates/register`, {
-    //   method: 'POST',
-    //   headers: {
-    //     Accept: 'application/json',
-    //     'Content-Type': 'application/json',
-    //     Authorization
-    //   },
-    //   body: JSON.stringify(this.state.candidateRegisterBody),
-    // })
-    // .then((response) => response.json())
-    // .then((responseJson) => {
-    //   console.log(responseJson);
-    // })
-    // .catch((error) => {
-    //   console.error(error);
-    // });
-    signUp(this.state.email, this.state.password, this, this.state.employerRegisterBody);
+    signUp(this.state.email, this.state.password, this.state.employerName, this.state.phone, this.props.lat, this.props.lon, this)
+    .then(() => {
+      console.log('signup done')
+    })
+    .catch((err) => {console.log('err signup')})
 
   }
   checkEmail() {
@@ -74,20 +57,20 @@ class SignUp extends Component {
                     </View>
                     <View style={{ flexDirection: 'row' }}>
                       <View style={styles.lastNameSection}>
-                        <Icon style={{ padding: 10 }} name="user" size={20} />
+                        <Icon style={{ padding: 10 }} name="bank" size={17} />
                         <TextInput
                             style={styles.input}
                             placeholder="Tên nhà tuyển dụng"
                             onChangeText={
-                              (employerName) => { this.state.employerRegisterBody.employerName = employerName; }}
+                              (employerName) => { this.setState({employerName}) }}
                             underlineColorAndroid="transparent"
                         />
                       </View>
                     </View>
                     
-                    <TouchableOpacity onPress={() => this.props.navigation.navigate('GetPosition', {type: 'SEARCH_FILL' })}>
-                      <View style={styles.commonSection}>
-                          <Icon2 style={{ padding: 10 }} name="home" size={20} />
+                    <TouchableOpacity onPress={() => this.props.navigation.navigate('GetPosition', {type: 'SignUp' })}>
+                      <View style={styles.commonSection} pointerEvents='none'>
+                          <Icon style={{ padding: 10 }} name="building-o" size={20} />
                           <TextInput
                               style={styles.input}
                               defaultValue={null}
@@ -100,11 +83,11 @@ class SignUp extends Component {
                       </View>
                     </TouchableOpacity>
                     <View style={styles.commonSection}>
-                      <Icon2 style={{ padding: 10 }} name="mail" size={20} />
+                      <Icon2 style={{ padding: 10 }} name="mail" size={19} />
                       <TextInput
                           style={styles.input}
                           placeholder="Email"
-                          onChangeText={(email) => { this.state.email = email; }}
+                          onChangeText={(email) => { this.setState({email}) }}
                           underlineColorAndroid="transparent"
                       />
                     </View>
@@ -113,7 +96,7 @@ class SignUp extends Component {
                       <TextInput
                           style={styles.input}
                           placeholder="Di động"
-                          onChangeText={(phone) => { this.state.employerRegisterBody.phone = phone; }}
+                          onChangeText={(phone) => { this.setState({phone}) }}
                           underlineColorAndroid="transparent"
                       />
                     </View>
@@ -123,7 +106,7 @@ class SignUp extends Component {
                           style={styles.input}
                           placeholder="Mật khẩu"
                           secureTextEntry
-                          onChangeText={(password) => { this.state.password = password; }}
+                          onChangeText={(password) => { this.setState({password})}}
                           underlineColorAndroid="transparent"
                       />
                     </View>
@@ -133,7 +116,7 @@ class SignUp extends Component {
                           style={styles.input}
                           placeholder="Nhập lại mật khẩu"
                           secureTextEntry
-                          onChangeText={(rePassword) => { this.state.rePassword = rePassword; }}
+                          onChangeText={(rePassword) => { this.setState({rePassword})}}
                           underlineColorAndroid="transparent"
                       />
                     </View>
@@ -258,6 +241,10 @@ const styles = StyleSheet.create({
   }
 });
 function mapStateToPops(state) {
-  return { addressStr: state.data.addressStr };
+  return { 
+    addressStr: state.data.addressStr,
+    lat: state.data.lat,
+    lon: state.data.lon
+  };
 }
 export default connect(mapStateToPops)(SignUp);

@@ -1,20 +1,22 @@
 import { Alert } from 'react-native';
 import {strings} from '../constants/Strings';
 
-export default function alertMsgErrorCallApi(msg, line) {
-    var message;
+export function alertMsgErrorCallApi(res, line) {
+    let message;
     console.log(line);
-    if (msg === 401) {
-        message = strings.access_token_expired;
-    } else if (msg === 403) {
-        message = strings.your_role_is_not_allowed;
-    } else if (msg === 500) {
-        message = strings.internal_server_error;
-    } else if (msg === 400){
-        message = strings.invalid_fields;
+    if(res && res.body && res.body.code && res.body.data && res.body.data[0] && res.body.data[0]){
+        message =  res.body.data[0].target + ': ' + res.body.data[0].required;
+    } else if(res && res.body && res.body.code && res.body.msg) {
+        message = res.body.msg;
     } else {
-        message = msg.toString();
+        if(res.status){
+            message = codeToMessage(res.status);
+        } else if(res.statusCode) {
+            message = codeToMessage(res.statusCode);
+        }
     }
+
+    
     Alert.alert(
         strings.notification,
         message,
@@ -23,4 +25,27 @@ export default function alertMsgErrorCallApi(msg, line) {
         ],
         {cancelable: false},
     );
+}
+export function alertMsgErrorCallApiString(message, line) {
+    console.log(line);
+    Alert.alert(
+        strings.notification,
+        message,
+        [
+            { text: 'OK', onPress: () => console.log('OK Pressed') },
+        ],
+        {cancelable: false},
+    );
+}
+function codeToMessage(code) {
+    if (code === 401) {
+        return strings.access_token_expired;
+    } else if (code === 403) {
+        return strings.your_role_is_not_allowed;
+    } else if (code === 500) {
+        return strings.internal_server_error;
+    } else if (code === 400){
+        return strings.invalid_fields;
+    } 
+    return code.toString();
 }

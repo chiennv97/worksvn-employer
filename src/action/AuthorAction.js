@@ -6,17 +6,11 @@ import {
     EMPLOYERS_API, OAUTH2_API, SECRET, CLIEN_ID
 } from '../constants/Constants';
 import { saveAccessToken, saveRefreshToken } from '../utils/asyncStorage';
-import alertMsgErrorCallApi from '../utils/alertMsgErrorCallApi';
+import {alertMsgErrorCallApi, alertMsgErrorCallApiString} from '../utils/alertMsgErrorCallApi';
 import {strings} from '../constants/Strings';
-// const avt = require()
+import {Alert} from 'react-native';
 
-export function loginSuccess(token, refreshToken) {
-    return {
-        type: 'SUCCESS_GET_AND_UPDATE_TOKEN',
-        token,
-        refreshToken
-    };
-}
+// const avt = require()
 
 
 export function authorAction(self, email, pass) {
@@ -63,64 +57,59 @@ export function authorAction(self, email, pass) {
                         //     });
                         self.props.navigation.navigate('Home');
                     } else {
-                        alertMsgErrorCallApi(res.statusCode, 'AuthorAction.js - 73');
+                        alertMsgErrorCallApi(res, 'AuthorAction.js - 73');
                     }
                 } else if (err !== null) {
-                    alertMsgErrorCallApi(err.toString(), 'AuthorAction.js - 76');
+                    alertMsgErrorCallApiString(err.toString(), 'AuthorAction.js - 76');
                 } else {
-                    alertMsgErrorCallApi(strings.final_error_msg, 'AuthorAction.js - 79');
+                    alertMsgErrorCallApiString(strings.final_error_msg, 'AuthorAction.js - 79');
                 }
             });
     };
 }
 
-export function signUp(_email, _pass, self, _candidateRegisterBody) {
-    //  const Authorization = `Basic ${base64.encode(`${email}:${pass}`)}`;
-    console.log('========candidateRegisterBody=======');
-    console.log(_candidateRegisterBody);
+export function signUp(email, pass, employerName, phone, lat, lon, self) {
     return new Promise((resolve, reject) => {
-        console.log('=========RETURN=========');
-        //dispatch
-        // return 
-        request
-            .post(`${BASE_URL.url}${CANDIDATES_API}candidates/registration/email`)
+        console.log(`${BASE_URL.url}${EMPLOYERS_API}employers/registration/email`);
+        request.post(`${BASE_URL.url}${EMPLOYERS_API}employers/registration/email`)
             .set('Accept', 'application/json')
             .set('Content-Type', 'application/json')
-            // .set('Authorization', Authorization)
             .send({
-                // candidateRegisterBody: JSON.stringify(_candidateRegisterBody)
-                email: _email,
-                password: _pass,
-                firstName: _candidateRegisterBody.firstName,
-                lastName: _candidateRegisterBody.lastName,
-                gender: _candidateRegisterBody.gender,
-                phone: _candidateRegisterBody.phone,
-                lat: _candidateRegisterBody.lat ? _candidateRegisterBody.lat : 0,
-                lon: _candidateRegisterBody.lon ? _candidateRegisterBody.lon : 0,
+                'email': email,
+                'password': pass,
+                'employerName': employerName,
+                'phone': phone,
+                'lat': lat ? lat : 0,
+                'lon': lon ? lon : 0
             })
             .finish((err, res) => {
-                console.log('=======ERR=======');
-                console.log(err);
-                console.log('=========Res========');
                 console.log(res);
-                console.log(res.statusCode);
-                if (err) {
-                    let errorMessage;
-                    if (res) {
-                        if (res.statusCode === 400) {
-                            errorMessage = strings.wrong_username_or_passowrd;
-                        } else if (res.statusCode === 404) {
-                            errorMessage = strings.notfound;
-                        } else {
-                            errorMessage = strings.internal_server_error;
-                        }
+                if (res !== null && res !== undefined) {
+                    if (res.statusCode === 200) {
+                        Alert.alert(
+                            strings.notification,
+                            strings.signUpSuccess,
+                            [
+                                { text: 'OK', onPress: () => console.log('OK Pressed') },
+                            ],
+                            {cancelable: false},
+                           );
+                          self.props.navigation.navigate('SignIn');
+                        resolve(res);
                     } else {
-                        errorMessage = strings.network_require_fail;
+                        alertMsgErrorCallApi(res, 'AuthorAction.js - 73');
+                        reject(res.statusCode);
                     }
-                    reject(errorMessage);
+                } else if (err !== null) {
+                    alertMsgErrorCallApiString(err.toString(), 'AuthorAction.js - 76');
+                    reject(res.statusCode);
                 } else {
-                    resolve(res);
+                    alertMsgErrorCallApiString(strings.final_error_msg, 'AuthorAction.js - 79');
+                    reject(res.statusCode);
                 }
-            });
-    });
+            })
+
+    })
+
+
 }

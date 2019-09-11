@@ -38,5 +38,6 @@ export const strings = {
     verify_pass : 'Xác nhận đặt lại mật khẩu qua email',
     send : 'Gửi',
     check_email: 'Email đổi mật khẩu đã gửi thành công. Vui lòng kiểm tra email!',
-    signUpSuccess: 'Vui lòng kiểm tra mail và xác nhận để tiếp tục đăng nhập!'
+    signUpSuccess: 'Vui lòng kiểm tra mail và xác nhận để tiếp tục đăng nhập!',
+    manager_post: 'Quản lý bài đăng'
 }

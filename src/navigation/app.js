@@ -8,23 +8,25 @@ import AuthLoadingScreen from '../screen/AuthLoadingScreen';
 import {height, width} from '../constants/dimenstion';
 import ForgotPassword from '../screen/ForgotPassword';
 import SignUp from '../screen/SignUp';
-import GetPosition from '../screen/GetPosition'
-// const Screens = createSwitchNavigator({
-//   Welcome,
-//   Login
-// });
-
-// export default createAppContainer(Screens);
+import GetPosition from '../screen/GetPosition';
+import Icon from 'react-native-vector-icons/Ionicons';
+import AntDesign from 'react-native-vector-icons/AntDesign';
+import Entypo from 'react-native-vector-icons/Entypo';
+import {MAIN_COLOR} from '../constants/Constants';
+import HeaderManager from '../components/HeaderManager'
 import React from 'react';
+import {strings} from '../constants/Strings'
 import {
-  ActivityIndicator,
+  SafeAreaView,
   AsyncStorage,
   Button,
   StatusBar,
   StyleSheet,
-  View,
+  View
 } from 'react-native';
-import { createStackNavigator, createSwitchNavigator, createAppContainer, createDrawerNavigator } from 'react-navigation';
+import { createStackNavigator, createSwitchNavigator, createAppContainer, createDrawerNavigator, createMaterialTopTabNavigator, MaterialTopTabBar } from 'react-navigation';
+import { createMaterialBottomTabNavigator } from "react-navigation-material-bottom-tabs";
+
 
 class SignInScreen extends React.Component {
   static navigationOptions = {
@@ -98,8 +100,100 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
 });
+function SafeAreaMaterialTopTabBar (props) {
+  return (
+    <React.Fragment>
+      <SafeAreaView style={{ flex:0, backgroundColor: MAIN_COLOR }} />
+      <StatusBar barStyle="light-content" />
+      <SafeAreaView>
+        <HeaderManager
+                bodyTitle={strings.manager_post}
+                onPress={() => {
+                    
+                }}
+                onPressRight={() => {
+                    
+                }}
+                iconRight={'search'}
+                iconLeft={'menu'}
+          />
+        <MaterialTopTabBar {...props}/>
+        
+      </SafeAreaView>
+    </React.Fragment>
+    
+  )
+}
+const ManagerTab = createMaterialTopTabNavigator ({
+  ActivePost: {
+    screen: SignInScreen,
+    navigationOptions: {
+      tabBarLabel: 'Đang hoạt động',
+    }
+  },
+  InActivePost: {
+    screen: SignInScreen,
+    navigationOptions: {
+      tabBarLabel: 'Đã hết hạn',
+    }
+  },
+  
+}, {
+  tabBarAccessibilityLabel: true,
+  tabBarComponent: SafeAreaMaterialTopTabBar
+})
+const BottomTab = createMaterialBottomTabNavigator({
 
-const AppStack = createStackNavigator({ Home: HomeScreen, Other: OtherScreen });
+  Manager: {
+    screen: ManagerTab,
+    navigationOptions: {
+        tabBarLabel: 'Quản lý',
+        tabBarIcon: ({ tintColor }) => (
+                <AntDesign style={{color: tintColor }} name="bars" size={25} />
+        ),
+    }},
+  Alert: {
+    screen: SignInScreen,
+    navigationOptions: {
+        tabBarLabel: 'Thông báo',
+        tabBarIcon: ({ tintColor }) => (
+                <Icon style={{color: tintColor }} name="md-notifications-outline" size={25} />
+            
+        ),
+    },
+    
+  },
+  Message: {
+    screen: SignInScreen,
+    navigationOptions: {
+        tabBarLabel: 'Nhắn tin',
+        tabBarIcon: ({ tintColor }) => (
+            
+                <Entypo style={{color: tintColor }} name="message" size={25} />
+            
+        ),
+    },
+    
+  },
+  ProfileSaved: {
+    screen: SignInScreen,
+    navigationOptions: {
+        tabBarLabel: 'Hồ sơ đã lưu',
+        tabBarIcon: ({ tintColor }) => (
+                <AntDesign style={{color: tintColor }} name="filetext1" size={25} />
+        ),
+    },
+    
+  },
+}, {
+  initialRouteName: 'Manager',
+  activeColor: MAIN_COLOR,
+  inactiveColor: '#A9A9A9',
+  barStyle: { backgroundColor: '#fff'},
+  shifting: true,
+  labeled: true,
+});
+const AppStack = createStackNavigator({ BottomTab: BottomTab, Home: HomeScreen }, { headerMode: 'none' });
 const AuthStack = createStackNavigator({ Welcome: Welcome, SignIn: Login, ForgotPassword: ForgotPassword, SignUp: SignUp, GetPosition: GetPosition },
   {
       initialRouteName: 'Welcome',

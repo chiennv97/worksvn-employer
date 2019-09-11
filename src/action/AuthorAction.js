@@ -55,7 +55,7 @@ export function authorAction(self, email, pass) {
                         //             lastName: res2.body.data.lastName
                         //         });
                         //     });
-                        self.props.navigation.navigate('Home');
+                        self.props.navigation.navigate('BottomTab');
                     } else {
                         alertMsgErrorCallApi(res, 'AuthorAction.js - 73');
                     }

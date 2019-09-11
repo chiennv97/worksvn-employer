@@ -1,13 +1,12 @@
 import { getRefreshToken, saveAccessToken, saveRefreshToken, getAccessToken } from '../utils/asyncStorage';
 import {
-    BASE_URL, ROUTE_KEY,
-    UPDATE_HEADER_PROFILE, UPDATE_JOBNAME,
-    OAUTH2_API, EMPLOYERS_API, CLIEN_ID, SECRET, PUBLIC_API
-} from '../../constants/Constants';
+    BASE_URL,
+    OAUTH2_API, EMPLOYERS_API, CLIEN_ID, SECRET
+} from '../constants/Constants';
 // import {loginError, loginSuccess, startLogin} from "../login/LoginAction";
 import request from '../utils/request';
 import {alertMsgErrorCallApi, alertMsgErrorCallApiString} from '../utils/alertMsgErrorCallApi';
-import strings from '../constants/Strings';
+import {strings} from '../constants/Strings';
 
 export function exchangeTokenSuccess(token, refreshToken, signin, loading, error) {
     return {
@@ -85,7 +84,7 @@ export function checkWhenOpenApp(self) {
                 }
             })
             .catch(() => {
-                alertMsgErrorCallApiString(strings.final_error_msg, 'SplashAction.js - 108');
+                alertMsgErrorCallApiString(strings.final_error_msg, 'SplashAction.js - 88');
             });
     };
 }

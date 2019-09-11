@@ -35,6 +35,10 @@ target 'demo' do
   pod 'Google-Maps-iOS-Utils'
   pod 'react-native-geolocation', :path => '../node_modules/@react-native-community/geolocation'
 
+
+
+  pod 'react-native-version-number', :path => '../node_modules/react-native-version-number'
+
   target 'demoTests' do
     inherit! :search_paths
     # Pods for testing

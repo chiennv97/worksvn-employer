@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { View, Text, Alert, Platform, Linking } from 'react-native';
+import { View, ActivityIndicator, Alert, Platform, Linking } from 'react-native';
 import VersionNumber from 'react-native-version-number';
-import { checkCurrentVersionOnStore } from './SplashFunc';
-import strings from '../../constants/Strings';
-import { checkWhenOpenApp } from './SplashAction';
+import { checkCurrentVersionOnStore } from '../function/SplashFunc';
+import {strings} from '../constants/Strings';
+import { checkWhenOpenApp } from '../action/SplashAction';
 
 class SplashComponent extends Component {
     componentDidMount() {
@@ -38,8 +38,12 @@ class SplashComponent extends Component {
     }
     render() {
         return (
-            <View>
-                <Text>SplashComponent</Text>
+            <View 
+            style={{
+                flex: 1,
+                alignItems: 'center',
+                justifyContent: 'center'}}>
+                <ActivityIndicator />
             </View>
         );
     }

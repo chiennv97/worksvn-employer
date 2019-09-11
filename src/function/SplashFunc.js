@@ -1,8 +1,9 @@
 import { Platform } from 'react-native';
-import { BASE_URL, MOBILE_API, PUBLIC_API } from '../constants/Constants';
+import { MOBILE_API, PUBLIC_API } from '../constants/Constants';
+import {BASE_URL} from '../constants/Url';
 import {alertMsgErrorCallApi, alertMsgErrorCallApiString} from '../utils/alertMsgErrorCallApi';
 import request from '../utils/request';
-import strings from '../constants/Strings';
+import {strings} from '../constants/Strings';
 
 export function checkCurrentVersionOnStore() {
     return new Promise((resolve, reject) => {

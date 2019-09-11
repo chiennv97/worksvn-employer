@@ -5,6 +5,7 @@ import Welcome from "../screen/Welcome";
 import Login from "../screen/Login";
 import Menu from '../screen/DrawerMenu';
 import AuthLoadingScreen from '../screen/AuthLoadingScreen';
+import SplashComponent from '../screen/Splash';
 import {height, width} from '../constants/dimenstion';
 import ForgotPassword from '../screen/ForgotPassword';
 import SignUp from '../screen/SignUp';
@@ -213,7 +214,7 @@ export const MenuNavigator = createDrawerNavigator({
 });
 export default createAppContainer(createSwitchNavigator(
   {
-    AuthLoading: AuthLoadingScreen,
+    AuthLoading: SplashComponent,
     App: MenuNavigator,
     Auth: AuthStack,
   },

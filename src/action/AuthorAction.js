@@ -33,7 +33,7 @@ export function authorAction(self, email, pass) {
                 if (res !== null && res !== undefined) {
                     if (res.statusCode === 200) {
                         saveAccessToken(res.body.data.accessToken);
-                        saveRefreshToken(res.body.data.accessToken);
+                        saveRefreshToken(res.body.data.refreshToken);
                         dispatch({
                             type: 'SUCCESS_GET_AND_UPDATE_TOKEN',
                             token: res.body.data.accessToken,

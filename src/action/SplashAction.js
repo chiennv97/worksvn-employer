@@ -1,8 +1,8 @@
 import { getRefreshToken, saveAccessToken, saveRefreshToken, getAccessToken } from '../utils/asyncStorage';
 import {
-    BASE_URL,
     OAUTH2_API, EMPLOYERS_API, CLIEN_ID, SECRET
 } from '../constants/Constants';
+import {BASE_URL} from '../constants/Url'
 // import {loginError, loginSuccess, startLogin} from "../login/LoginAction";
 import request from '../utils/request';
 import {alertMsgErrorCallApi, alertMsgErrorCallApiString} from '../utils/alertMsgErrorCallApi';
@@ -23,7 +23,9 @@ export function checkWhenOpenApp(self) {
     return dispatch => {
         getRefreshToken()
             .then(refreshToken => {
+                console.log('in ra refreshToken');
                 if (refreshToken === '') {
+                    console.log(`${BASE_URL.url}${OAUTH2_API}authentication/refresh-token`);
                     self.props.navigation.navigate("SignIn");
                 } else {
                     console.log(`${BASE_URL.url}${OAUTH2_API}authentication/refresh-token`);
@@ -36,26 +38,32 @@ export function checkWhenOpenApp(self) {
                             refreshToken
                         })
                         .finish((err, res) => {
+                            console.log(res);
                             if (res !== null && res !== undefined) {
                                 if (res.statusCode === 200) {
                                     saveAccessToken(res.body.data.accessToken);
                                     saveRefreshToken(res.body.data.refreshToken);
                                     dispatch(exchangeTokenSuccess(res.body.data.accessToken,
                                         res.body.data.refreshToken, true, false, false));
-                                    console.log(`${BASE_URL.url}${EMPLOYERS_API}candidates/headerProfile`)
+                                    console.log(`${BASE_URL.url}${EMPLOYERS_API}employer/headerProfile`)
                                     request
-                                        .get(`${BASE_URL.url}${EMPLOYERS_API}candidates/headerProfile`)
+                                        .get(`${BASE_URL.url}${EMPLOYERS_API}employers/headerProfile`)
                                         .set('Content-Type', 'application/json')
                                         .set('Authorization', `Bearer ${res.body.data.accessToken}`)
                                         .finish((err2, res2) => {
-                                            dispatch({
-                                                type: 'UPDATE_HEADER_PROFILE',
-                                                avatarUrl: res2.body.data.avatarUrl,
-                                                coverUrl: res2.body.data.coverUrl,
-                                                regionName: res2.body.data.regionName,
-                                                firstName: res2.body.data.firstName,
-                                                lastName: res2.body.data.lastName
-                                            });
+                                            console.log(res2);
+                                            if (res2.statusCode === 200) {
+                                                dispatch({
+                                                    type: 'UPDATE_HEADER_PROFILE',
+                                                    logoUrl: res2.body.data.logoUrl,
+                                                    coverUrl: res2.body.data.coverUrl,
+                                                    regionName: res2.body.data.regionName,
+                                                    employerName: res2.body.data.employerName,
+                                                });
+                                            } else {
+                                                alertMsgErrorCallApi(res2, 'SplashAction.js - 64');
+                                            }
+                                            
                                         });
                                     // request
                                     //     .get(`${BASE_URL.url}${PUBLIC_API}jobNames/active`)

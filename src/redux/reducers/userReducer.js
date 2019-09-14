@@ -5,10 +5,10 @@ const initialState = {
     signin: false,
     loading: false,
     error: false,
-    avatarUrl: null,
+    logoUrl: null,
     coverUrl: null,
     regionName: null,
-    firstName: null,
+    employerName: null,
     lastName: null
 };
 
@@ -21,9 +21,9 @@ const UserReducer = (state = initialState, action) => {
         case 'ERROR_GET_TOKEN':
             return {...state, accessToken: null, refreshToken: null, signin: false, loading: false, error: true}
         case 'UPDATE_HEADER_PROFILE':
-            return {...state, avatarUrl: action.avatarUrl, coverUrl: action.coverUrl, regionName: action.regionName, firstName: action.firstName, lastName: action.lastName}
+            return {...state, logoUrl: action.logoUrl, coverUrl: action.coverUrl, regionName: action.regionName, employerName: action.employerName}
         case 'LOGOUT':
-            return {...state, accessToken: null, refreshToken: null, signin: false, loading: false, error: false, avatarUrl: null, coverUrl: null, regionName: null, firstName: null, lastName: null}
+            return {...state, accessToken: null, refreshToken: null, signin: false, loading: false, error: false, avatarUrl: null, coverUrl: null, regionName: null, employerName: null}
     default:
         return state;
     }

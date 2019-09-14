@@ -110,7 +110,7 @@ function SafeAreaMaterialTopTabBar (props) {
         <HeaderManager
                 bodyTitle={strings.manager_post}
                 onPress={() => {
-                    
+                  props.navigation.toggleDrawer(); 
                 }}
                 onPressRight={() => {
                     

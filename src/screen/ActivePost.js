@@ -1,15 +1,13 @@
 import React, { Component } from 'react';
 import { View, FlatList, Text, ActivityIndicator, StyleSheet, Dimensions, Easing, Animated } from 'react-native';
 import { connect } from 'react-redux';
-import ItemPost from './ItemPost';
-import { NEW_SCALE_RATIO } from '../../constants/Constants';
-import strings from '../../constants/Strings';
-import HorizontalFlatListItem from './HorizontalFlatListItem';
-import {getJobs, getJobsWithoutLogin} from './SearchFunc';
+import ItemPost from '../components/ItemPost';
+import { NEW_SCALE_RATIO } from '../constants/Constants';
+import {getJobs} from '../function/PostFunc';
 
 const { height } = Dimensions.get('window');
 
-class Search extends Component {
+class ActivePost extends Component {
   constructor(props) {
     super(props);
       this.state = {
@@ -36,7 +34,6 @@ class Search extends Component {
     //   .catch((error) => {
     //     console.error(error);
     //   });
-      if (this.props.signin) {
           getJobs(this, this.props.accessToken, 0)
               .then(listJobs => {
                   this.listJobs = listJobs;
@@ -50,21 +47,7 @@ class Search extends Component {
               .catch(() => {
                   console.log('fail to get searchStudent');
               });
-      } else {
-          getJobsWithoutLogin(this, 0)
-              .then(listJobs => {
-                  this.listJobs = listJobs;
-                  this.firstlistJobs = listJobs;
-                  var currentPage = this.state.page + 1;
-                  this.setState({isLoading: false,
-                      loadingMore: false,
-                      outOfData: false,
-                      page: currentPage });
-              })
-              .catch(() => {
-                  console.log('fail to get searchStudent');
-              });
-      }
+      
   }
   openMenu() {
     this.props.navigation.toggleDrawer();
@@ -90,7 +73,6 @@ class Search extends Component {
 
       if (this.state.outOfData || this.state.loadingMore) return;
       this.setState({ loadingMore: true });
-      if (this.props.signin) {
           getJobs(this, this.props.accessToken, this.state.page)
               .then(listJobs => {
                   var currentPage = this.state.page + 1;
@@ -105,26 +87,9 @@ class Search extends Component {
               .catch(() => {
                   console.log('fail to get searchStudent');
               });
-      } else {
-          getJobsWithoutLogin(this, this.state.page)
-              .then(listJobs => {
-                  var currentPage = this.state.page + 1;
-                  this.listJobs = this.listJobs.concat(listJobs);
-                  this.setState({loadingMore: false });
-                  if (listJobs.length === 0) {
-                      this.setState({outOfData: true});
-                  } else {
-                      this.setState({page: currentPage});
-                  }
-              })
-              .catch(() => {
-                  console.log('fail to get searchStudent');
-              });
-      }
   };
   refreshList = () => {
         this.setState({refreshing: true, page: 0});
-        if (this.props.signin) {
             getJobs(this, this.props.accessToken, 0)
                 .then(listJobs => {
                     this.setState({refreshing: true});
@@ -141,24 +106,6 @@ class Search extends Component {
                 .catch(() => {
                     console.log('fail to get searchStudent');
                 });
-        } else {
-            getJobsWithoutLogin(this, 0)
-                .then(listJobs => {
-                    this.setState({refreshing: true});
-                    this.listJobs = [];
-                    this.listJobs = listJobs;
-                    this.setState({
-                        isLoading: false,
-                        loadingMore: false,
-                        refreshing: false,
-                        outOfData: false,
-                        page: 1
-                    });
-                })
-                .catch(() => {
-                    console.log('fail to get searchStudent');
-                });
-        }
     };
   renderFooter = () => {
       console.log(this.state.loadingMore);
@@ -201,21 +148,6 @@ class Search extends Component {
       <View style={{flex: 1}}>
                 <FlatList
                     data={this.listJobs}
-                    ListHeaderComponent={() => (
-                        <View style={styles.horizontalFlatlist}>
-                            <Text style={styles.titleList}>Công Việc Nổi Bật</Text>
-                            <FlatList
-                                horizontal
-                                data={this.firstlistJobs}
-                                style={{backgroundColor: 'white'}}
-                                showsHorizontalScrollIndicator={false}
-                                renderItem={({ item, index}) => (
-                                    <HorizontalFlatListItem data={item} index={index} nav={this.props.navigation} />)}
-                                keyExtractor={(item) => item.id}
-                            />
-                            <Text style={styles.titleList}>Tất Cả Công Việc</Text>
-                        </View>
-                    )}
                     keyExtractor={(item, index) => index}
                     renderItem={({ item }) => <ItemPost data={item} nav={this.props.navigation} />}
                     ListFooterComponent={this.renderFooter}
@@ -249,4 +181,4 @@ function mapStateToProps(state) {
         signin: state.token.signin
     };
 }
-export default connect(mapStateToProps)(Search);
+export default connect(mapStateToProps)(ActivePost);

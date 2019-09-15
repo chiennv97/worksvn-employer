@@ -16,7 +16,8 @@ import Entypo from 'react-native-vector-icons/Entypo';
 import {MAIN_COLOR} from '../constants/Constants';
 import HeaderManager from '../components/HeaderManager'
 import React from 'react';
-import {strings} from '../constants/Strings'
+import {strings} from '../constants/Strings';
+import ActivePost from '../screen/ActivePost'
 import {
   SafeAreaView,
   AsyncStorage,
@@ -127,7 +128,7 @@ function SafeAreaMaterialTopTabBar (props) {
 }
 const ManagerTab = createMaterialTopTabNavigator ({
   ActivePost: {
-    screen: SignInScreen,
+    screen: ActivePost,
     navigationOptions: {
       tabBarLabel: 'Đang hoạt động',
     }

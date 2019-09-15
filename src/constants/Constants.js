@@ -11,3 +11,4 @@ export const KEY_GOOGLE_MAP = 'AIzaSyBH3XpDDs01zBLosX1SRz7fHseqvFTW_XQ';
 export const PUBLIC_API = 'public/api/';
 export const MOBILE_API = 'mobileApp';
 export const CANDIDATES_API = 'candidates/api/';
+export const SCALE_FONT = 1;

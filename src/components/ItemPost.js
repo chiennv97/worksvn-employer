@@ -7,20 +7,63 @@ import Entypo from 'react-native-vector-icons/Entypo';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 const defaultLogo = require('../../assets/images/icon.png');
+import {showOrHiddenPost, extendPost, removePost} from '../function/PostFunc';
+import { connect } from 'react-redux';
+import { Chip } from 'react-native-paper';
+import {
+  Menu,
+  MenuOptions,
+  MenuOption,
+  MenuTrigger,
+} from 'react-native-popup-menu';
+import * as PostAction from '../action/PostAction';
 
-export default class ItemPost extends Component {
+class ItemPost extends Component {
   render() {
     const { logoStyle, dataStyle, wrapperLine1, scrollviewImage, wrapperDate, wrapper, wrapper2 } = styles;
     return (
       <View style={wrapper}>
         <TouchableOpacity onPress={() => this.props.nav.navigate('JOB_DETAIL_SCREEN', { id: this.props.data.id, jobNameID: this.props.data.jobName.id })}>
-        <View style={{alignItems: 'flex-end'}}>
-          <TouchableOpacity>
-            <Entypo style={{ paddingTop: 10, paddingRight: 10, paddingBottom: 0, paddingLeft: 20 }} name="dots-three-horizontal" size={19}/>
-          </TouchableOpacity> 
+        <View style={{justifyContent: 'space-between', flexDirection: 'row'}}>
+              {this.props.data.hidden ? <FontAwesome style={{paddingTop: 10, paddingRight: 20, paddingBottom: 0, paddingLeft: 10}}  name="eye-slash" size={19} /> : <View/>}
+              <Menu>
+                <MenuTrigger>
+                  <Entypo style={{ paddingTop: 10, paddingRight: 10, paddingBottom: 0, paddingLeft: 20 }} name="dots-three-horizontal" size={19}/>
+                </MenuTrigger>
+                <MenuOptions customStyles={{ optionText: [styles.text, styles.slideInOption] }}>
+                  <MenuOption onSelect={() => {
+                    showOrHiddenPost(this, this.props.token, !this.props.data.hidden, this.props.data.id)
+                    .then(() => {
+                      this.props.data.hidden = !this.props.data.hidden;
+                      {this.props.data.hidden ? this.props.updateSnackbar(true, 'Ẩn bài đăng thành công') : this.props.updateSnackbar(true, 'Hiện bài đăng thành công')}
+                      this.forceUpdate();
+                    })
+                    .catch((err) => {console.log(err)})
+                    }} text={this.props.data.hidden ? 'Hiện bài đăng' : 'Ẩn bài đăng'} />
+                  <MenuOption onSelect={() => {
+                    extendPost(this, this.props.token, this.props.data.id)
+                    .then((data) => {
+                      this.props.data.timeLeft = data.data.timeLeft;
+                      this.props.updateSnackbar(true, 'Gia hạn thành công') 
+                      this.forceUpdate();
+                    })
+                    .catch(() => {console.log(err)})
+                  }} text='Gia hạn thêm' />
+                  <MenuOption onSelect={() => {
+                    removePost(this, this.props.token, this.props.data.id)
+                    .then(() => {
+                      // this.props.activePost
+                      let newActivePost = this.props.activePost;
+                      newActivePost.splice(this.props.index, 1)
+                      this.props.removeIndexActivePost(newActivePost)
+                      this.props.updateSnackbar(true, 'Xoá bài thành công') 
+                      this.forceUpdate()
+                    })
+                    .catch((err) => {console.log(err)})
+                  }} text='Xoá bài đăng' />
+                </MenuOptions>
+              </Menu>
         </View>
-       
-      
           <View style={wrapperLine1}>
             <View style={logoStyle}>
               <Image
@@ -50,7 +93,9 @@ export default class ItemPost extends Component {
                 <MaterialCommunityIcons style={{color: fontColor}}  name="map-marker" size={15}/>
                 <Text numberOfLines={1} style={{color: fontColor}}>{this.props.data.employerBranchName}</Text>
               </View>
-              
+              <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-start', marginTop: 5}}>
+                <Chip>{this.props.data.jobType}</Chip>
+              </View>
             </View>
           </View>
       </TouchableOpacity>
@@ -70,6 +115,7 @@ export default class ItemPost extends Component {
               <Text style={{fontSize: 21, paddingLeft: 10}}>{this.props.data.suitableCount}</Text>
             </TouchableOpacity>
           </View>
+          
       </View>
     );
   }
@@ -80,7 +126,7 @@ const styles = StyleSheet.create({
     paddingRight: 10,
     paddingBottom: 10
   },
-  logoStyle: { flex: 3, paddingRight: 5, paddingLeft: 10 },
+  logoStyle: { flex: 3, paddingRight: 5, paddingLeft: 10, justifyContent: 'center'},
   dataStyle: { flex: 10, paddingLeft: 5 , paddingRight: 10},
   scrollviewImage: {
         height: 50 * NEW_SCALE_RATIO,
@@ -109,6 +155,20 @@ const styles = StyleSheet.create({
       shadowOpacity: 0.22,
       shadowRadius: 2.22,
       elevation: 3,
-     }
+     },
+     slideInOption: {
+      padding: 5,
+    },
+    text: {
+      fontSize: 18,
+    },
 });
 const fontColor = '#333333';
+function mapStateToProps(state) {
+  return {
+      accessToken: state.token.accessToken,
+      visible: state.data.snackbar,
+      activePost: state.data.activePost
+  };
+}
+export default connect(mapStateToProps, PostAction)(ItemPost);

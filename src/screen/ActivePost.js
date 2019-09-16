@@ -4,6 +4,8 @@ import { connect } from 'react-redux';
 import ItemPost from '../components/ItemPost';
 import { NEW_SCALE_RATIO } from '../constants/Constants';
 import {getJobs} from '../function/PostFunc';
+import { Snackbar } from 'react-native-paper';
+import * as PostAction from '../action/PostAction';
 
 const { height } = Dimensions.get('window');
 
@@ -15,10 +17,10 @@ class ActivePost extends Component {
           reloading: false,
           refreshing: false,
           outOfData: false,
-          page: 0
+          page: 0,
+          visible: true
       };
       this.listJobs = [];
-      this.firstlistJobs = [];
       this.paddingLoadingMore = new Animated.Value(20);
   }
   componentDidMount() {
@@ -36,8 +38,8 @@ class ActivePost extends Component {
     //   });
           getJobs(this, this.props.accessToken, 0)
               .then(listJobs => {
-                  this.listJobs = listJobs;
-                  this.firstlistJobs = listJobs;
+                //   this.listJobs = listJobs;
+                  this.props.setActivePost(listJobs)
                   var currentPage = this.state.page + 1;
                   this.setState({isLoading: false,
                       loadingMore: false,
@@ -76,7 +78,8 @@ class ActivePost extends Component {
           getJobs(this, this.props.accessToken, this.state.page)
               .then(listJobs => {
                   var currentPage = this.state.page + 1;
-                  this.listJobs = this.listJobs.concat(listJobs);
+                  let newListJobs = this.props.activePost.concat(listJobs);
+                  this.props.setActivePost(newListJobs);
                   this.setState({loadingMore: false });
                   if (listJobs.length === 0) {
                       this.setState({outOfData: true});
@@ -93,8 +96,9 @@ class ActivePost extends Component {
             getJobs(this, this.props.accessToken, 0)
                 .then(listJobs => {
                     this.setState({refreshing: true});
-                    this.listJobs = [];
-                    this.listJobs = listJobs;
+                    // this.listJobs = [];
+                    // this.listJobs = listJobs;
+                    this.props.setActivePost(listJobs);
                     this.setState({
                         isLoading: false,
                         loadingMore: false,
@@ -127,11 +131,10 @@ class ActivePost extends Component {
       }
       return (
           <Animated.View style={{paddingTop: this.paddingLoadingMore,
-              backgroundColor: 'white',
               paddingBottom: 40
           }}>
               {this.state.loadingMore && (
-                  <ActivityIndicator size="small"/>
+                  <ActivityIndicator/>
               )}
           </Animated.View>
       );
@@ -147,15 +150,31 @@ class ActivePost extends Component {
     return (
       <View style={{flex: 1}}>
                 <FlatList
-                    data={this.listJobs}
+                    data={this.props.activePost}
                     keyExtractor={(item, index) => index}
-                    renderItem={({ item }) => <ItemPost data={item} nav={this.props.navigation} />}
+                    renderItem={({ item, index }) => <ItemPost data={item} nav={this.props.navigation} index={index} token={this.props.accessToken} />}
                     ListFooterComponent={this.renderFooter}
                     onEndReached={this.handleLoadMore}
                     onEndReachedThreshold={0.5}
                     onRefresh={this.refreshList}
                     refreshing={this.state.refreshing}
+                    maxToRenderPerBatch={10}
+                    windowSize={10}
+                    removeClippedSubviews={true}
+
                 />
+                <Snackbar
+                    visible={this.props.visible}
+                    onDismiss={() => this.props.updateSnackbar(false, null)}
+                    action={{
+                    label: 'OK',
+                    onPress: () => {
+                        // Do something
+                    },
+                    }}
+                >
+                    {this.props.dataSnackbar}
+                </Snackbar>
       </View>
     );
   }
@@ -178,7 +197,10 @@ const styles = StyleSheet.create({
 function mapStateToProps(state) {
     return {
         accessToken: state.token.accessToken,
-        signin: state.token.signin
+        visible: state.data.snackbar,
+        dataSnackbar: state.data.dataSnackbar,
+        signin: state.token.signin,
+        activePost: state.data.activePost
     };
 }
-export default connect(mapStateToProps)(ActivePost);
+export default connect(mapStateToProps, PostAction)(ActivePost);

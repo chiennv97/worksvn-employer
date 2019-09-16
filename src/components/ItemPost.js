@@ -55,14 +55,14 @@ export default class ItemPost extends Component {
           </View>
       </TouchableOpacity>
           <View style={wrapperDate}>
-            <TouchableOpacity style={{flexDirection: 'row', alignItems: 'center', paddingTop: 10, paddingLeft: 25, paddingRight: 25}}>
+            <TouchableOpacity style={{flex: 1,flexDirection: 'row', alignItems: 'center', paddingTop: 10, paddingLeft: 25, paddingRight: 25, justifyContent: 'center'}}>
               <View style={{alignItems: 'center'}}>
                 <MaterialCommunityIcons style={{color: fontColor}}  name="account-plus" size={28}/>
                 <Text>Ứng Tuyển</Text>
               </View>
               <Text style={{fontSize: 21, paddingLeft: 10}}>{this.props.data.appliedCount}</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={{flexDirection: 'row', alignItems: 'center', paddingTop: 10, paddingLeft: 25, paddingRight: 25}}>
+            <TouchableOpacity style={{flex: 1,flexDirection: 'row', alignItems: 'center', paddingTop: 10, paddingLeft: 25, paddingRight: 25, justifyContent: 'center'}}>
               <View style={{alignItems: 'center'}}>
                 <MaterialCommunityIcons style={{color: fontColor}}  name="account-search" size={28}/>
                 <Text>Tương Thích</Text>

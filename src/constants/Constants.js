@@ -12,3 +12,7 @@ export const PUBLIC_API = 'public/api/';
 export const MOBILE_API = 'mobileApp';
 export const CANDIDATES_API = 'candidates/api/';
 export const SCALE_FONT = 1;
+export const SCALE_BORDER = 1;
+export const SUB_COLOR = '#bcbcbd';
+export const BACKGROUND_COLOR = 'white';
+export const ICON_COLOR = '#9E9E9E';

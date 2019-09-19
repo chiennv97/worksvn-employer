@@ -53,41 +53,9 @@ class Menu extends Component {
                 <View style={styles.title}>
                     <Text style={[styles.titleFuncName]}>{strings.main_func}</Text>
                 </View>
-                {!this.props.signin ?
-                    <View>
-                    {/*signin*/}
-                    <TouchableOpacity style={styles.funcTab} onPress={() => { this.gotoSignIn(); }}>
-                        <View>
-                        <MaterialCommunityIcons
-                            name='login-variant'
-                            size={18 * NEW_SCALE_RATIO}
-                            style={styles.icon}
-                        />
-                        </View>
-                        <View style={styles.funcContent}>
-                        <Text style={styles.funcName} >{strings.login}</Text>
-                        </View>
-                    </TouchableOpacity>
-                    {/*signup*/}
-                    <TouchableOpacity
-                        style={styles.funcTabEnd} onPress={() => { this.gotoSignUp(); }}
-                    >
-                        <Entypo
-                        name='key'
-                        size={18 * NEW_SCALE_RATIO}
-                        style={styles.icon}
-                        />
-                        <View style={styles.funcContent}>
-                        <Text style={styles.funcName} >{strings.signup}</Text>
-                        </View>
-                    </TouchableOpacity>
-                    </View>
-                    : null
-                }
-                {this.props.signin ?
                     <View>
                     {/* user */}
-                    <TouchableOpacity style={styles.funcTab} onPress={() => { }}>
+                    <TouchableOpacity style={styles.funcTab} onPress={() => { this.props.navigation.navigate('Profile')}}>
                         <MaterialCommunityIcons
                         name='account-outline'
                         size={20 * NEW_SCALE_RATIO}
@@ -142,8 +110,7 @@ class Menu extends Component {
                         </View>
                     </TouchableOpacity>
                     </View>
-                    : null
-                }
+                    
 
                 <View style={styles.title}>
                     <Text style={[styles.titleFuncName]}>{strings.other}</Text>
@@ -212,7 +179,6 @@ const styles = StyleSheet.create({
     fontWeight: '400',
     fontSize: 10 * NEW_SCALE_RATIO,
     color: '#525252',
-    fontWeight: 'bold'
 
   },
   funcTab: {
@@ -244,21 +210,16 @@ const styles = StyleSheet.create({
     fontWeight: '400',
     fontSize: 10 * NEW_SCALE_RATIO,
     color: 'gray',
-    fontWeight: 'bold',
   },
   titleName: {
     marginLeft: 10 * NEW_SCALE_RATIO,
     fontWeight: '400',
     fontSize: 11 * NEW_SCALE_RATIO,
-    color: 'gray',
-    fontWeight: 'bold',
   },
   subTitleName: {
     marginLeft: 10 * NEW_SCALE_RATIO,
     fontWeight: '400',
     fontSize: 8 * NEW_SCALE_RATIO,
-    color: 'gray',
-    fontWeight: 'bold',
   },
   cover: {
     height: 80 * NEW_SCALE_RATIO,

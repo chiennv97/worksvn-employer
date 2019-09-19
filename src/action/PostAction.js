@@ -7,10 +7,10 @@ export function updateSnackbar(visible, dataSnackbar) {
     };
 }
 
-export function setActivePost(listJobs) {
+export function setActivePost(listJobs, numberActivePost) {
     return (dispatch) => {
         dispatch({
-            type: 'SET_ACTIVE_JOB', activePost: listJobs
+            type: 'SET_ACTIVE_JOB', activePost: listJobs, numberActivePost: numberActivePost
         });
     };
 }

@@ -1,14 +1,12 @@
 import React, { Component } from 'react';
-import { View, FlatList, Text, ActivityIndicator, StyleSheet, Dimensions, Easing, Animated } from 'react-native';
+import { View, FlatList, StatusBar, ActivityIndicator, StyleSheet, SafeAreaView, Easing, Animated } from 'react-native';
 import { connect } from 'react-redux';
-import ItemPost from '../components/ItemPost';
-import { NEW_SCALE_RATIO } from '../constants/Constants';
-import {getJobs} from '../function/PostFunc';
-import { Snackbar } from 'react-native-paper';
+import ItemPreviewCandidate from '../components/ItemPreviewCandidate';
+import { NEW_SCALE_RATIO, MAIN_COLOR } from '../constants/Constants';
+import {getApplyJobs} from '../function/PostFunc';
 import * as PostAction from '../action/PostAction';
-
-const { height } = Dimensions.get('window');
-class ActivePost extends Component {
+import HeaderScreenDetail from '../components/HeaderScreenDetail';
+class Apply extends Component {
   constructor(props) {
     super(props);
       this.state = {
@@ -22,22 +20,16 @@ class ActivePost extends Component {
       this.listJobs = [];
       this.paddingLoadingMore = new Animated.Value(20);
   }
-  static navigationOptions = ({ navigation }) => ({
-    title: navigation.getParam('title', 'Đang hoạt động'),
-    });
   componentDidMount() {
-          getJobs(this, this.props.accessToken, 0)
+
+    getApplyJobs(this, this.props.accessToken, 0, this.props.navigation.getParam('id', 'null'))
               .then(listJobs => {
-                //   this.listJobs = listJobs;
-                  this.props.setActivePost(listJobs.items, listJobs.totalItems)
+                  this.listJobs = listJobs.items;
                   var currentPage = this.state.page + 1;
                   this.setState({isLoading: false,
                       loadingMore: false,
                       outOfData: false,
                       page: currentPage }); 
-                      console.log(listJobs.totalItems );
-                      let newTitle = `Đang hoạt động (${listJobs.totalItems})`
-                      this.props.navigation.setParams({ title:  newTitle})
               })
               .catch(() => {
                   console.log('fail to get searchStudent');
@@ -50,11 +42,12 @@ class ActivePost extends Component {
   handleLoadMore = () => {
       if (this.state.outOfData || this.state.loadingMore) return;
       this.setState({ loadingMore: true });
-          getJobs(this, this.props.accessToken, this.state.page)
+      getApplyJobs(this, this.props.accessToken, this.state.page, this.props.navigation.getParam('id', 'null'))
               .then(listJobs => {
                   var currentPage = this.state.page + 1;
-                  let newListJobs = this.props.activePost.concat(listJobs.items);
-                  this.props.setActivePost(newListJobs, listJobs.totalItems);
+                //   let newListJobs = this.props.activePost.concat(listJobs.items);
+                //   this.props.setActivePost(newListJobs, listJobs.totalItems);
+                this.listJobs = this.listJobs.concat(listJobs.items);
                   this.setState({loadingMore: false });
                   if (listJobs.length === 0) {
                       this.setState({outOfData: true});
@@ -68,12 +61,12 @@ class ActivePost extends Component {
   };
   refreshList = () => {
         this.setState({refreshing: true, page: 0});
-            getJobs(this, this.props.accessToken, 0)
+        getApplyJobs(this, this.props.accessToken, 0, this.props.navigation.getParam('id', 'null'))
                 .then(listJobs => {
                     this.setState({refreshing: true});
-                    // this.listJobs = [];
-                    // this.listJobs = listJobs;
-                    this.props.setActivePost(listJobs.items, listJobs.totalItems);
+                    this.listJobs = [];
+                    this.listJobs = listJobs.items;
+                    // this.props.setActivePost(listJobs.items, listJobs.totalItems);
                     this.setState({
                         isLoading: false,
                         loadingMore: false,
@@ -123,34 +116,27 @@ class ActivePost extends Component {
       );
     }
     return (
-      <View style={{flex: 1}}>
+        <React.Fragment>
+            <SafeAreaView style={{ flex:0, backgroundColor: MAIN_COLOR }} />
+            <StatusBar barStyle="light-content" />
+            <SafeAreaView style={{ flex: 1, backgroundColor: 'white' }}>
+                <HeaderScreenDetail nav={this.props.navigation} title={'Danh sách ứng tuyển'} />
                 <FlatList
-                    data={this.props.activePost}
-                    keyExtractor={(item, index) => index}
-                    renderItem={({ item, index }) => <ItemPost data={item} nav={this.props.navigation} index={index} token={this.props.accessToken} />}
-                    ListFooterComponent={this.renderFooter}
-                    onEndReached={this.handleLoadMore}
-                    onEndReachedThreshold={0.5}
-                    onRefresh={this.refreshList}
-                    refreshing={this.state.refreshing}
-                    maxToRenderPerBatch={10}
-                    windowSize={10}
-                    removeClippedSubviews={true}
+                        data={this.listJobs}
+                        keyExtractor={(item, index) => index}
+                        renderItem={({ item, index }) => <ItemPreviewCandidate data={item}  jid={this.props.navigation.getParam('id', 'null')} nav={this.props.navigation} index={index} token={this.props.accessToken} />}
+                        ListFooterComponent={this.renderFooter}
+                        onEndReached={this.handleLoadMore}
+                        onEndReachedThreshold={0.5}
+                        onRefresh={this.refreshList}
+                        refreshing={this.state.refreshing}
+                        maxToRenderPerBatch={10}
+                        windowSize={10}
+                        removeClippedSubviews={true}
 
-                />
-                <Snackbar
-                    visible={this.props.visible}
-                    onDismiss={() => this.props.updateSnackbar(false, null)}
-                    action={{
-                    label: 'OK',
-                    onPress: () => {
-                        // Do something
-                    },
-                    }}
-                >
-                    {this.props.dataSnackbar}
-                </Snackbar>
-      </View>
+                    />
+            </SafeAreaView>
+        </React.Fragment>
     );
   }
 }
@@ -175,8 +161,6 @@ function mapStateToProps(state) {
         visible: state.data.snackbar,
         dataSnackbar: state.data.dataSnackbar,
         signin: state.token.signin,
-        activePost: state.data.activePost,
-        numberActivePost: state.data.numberActivePost,
     };
 }
-export default connect(mapStateToProps, PostAction)(ActivePost);
+export default connect(mapStateToProps, PostAction)(Apply);

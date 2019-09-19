@@ -2,7 +2,7 @@ import moment from 'moment';
 
 export const formatDate = (date) => moment.unix(date / 1000).format('DD/MM/YYYY');
 
-export const formatDateTime = (dateTime) => moment.unix(dateTime / 1000).format('MM/DD HH:mm');
+export const formatDateTime = (dateTime) => moment.unix(dateTime / 1000).format('DD/MM/YYYY HH:mm');
 
 export const formatDateToTimeStamp = (date) => moment(date, 'DD/MM/YYYY', true).format('x');
 

@@ -23,7 +23,7 @@ class ItemPost extends Component {
     const { logoStyle, dataStyle, wrapperLine1, scrollviewImage, wrapperDate, wrapper, wrapper2 } = styles;
     return (
       <View style={wrapper}>
-        <TouchableOpacity onPress={() => this.props.nav.navigate('JOB_DETAIL_SCREEN', { id: this.props.data.id, jobNameID: this.props.data.jobName.id })}>
+        <TouchableOpacity onPress={() => this.props.nav.navigate('JobDetail', { id: this.props.data.id, jobNameID: this.props.data.jobName.id })}>
         <View style={{justifyContent: 'space-between', flexDirection: 'row'}}>
               {this.props.data.hidden ? <FontAwesome style={{paddingTop: 10, paddingRight: 20, paddingBottom: 0, paddingLeft: 10}}  name="eye-slash" size={19} /> : <View/>}
               <Menu>
@@ -100,7 +100,9 @@ class ItemPost extends Component {
           </View>
       </TouchableOpacity>
           <View style={wrapperDate}>
-            <TouchableOpacity style={{flex: 1,flexDirection: 'row', alignItems: 'center', paddingTop: 10, paddingLeft: 25, paddingRight: 25, justifyContent: 'center'}}>
+            <TouchableOpacity 
+                onPress={() => this.props.nav.navigate('Apply', { id: this.props.data.id})}
+                style={{flex: 1,flexDirection: 'row', alignItems: 'center', paddingTop: 10, paddingLeft: 25, paddingRight: 25, justifyContent: 'center'}}>
               <View style={{alignItems: 'center'}}>
                 <MaterialCommunityIcons style={{color: fontColor}}  name="account-plus" size={28}/>
                 <Text>Ứng Tuyển</Text>

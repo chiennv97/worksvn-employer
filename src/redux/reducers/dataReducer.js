@@ -7,7 +7,8 @@ const initialState = {
     addressStr: null,
     snackbar: false,
     dataSnackbar: null,
-    activePost: null
+    activePost: null,
+    numberActivePost: 0
 };
 
 const dataReducer = (state = initialState, action) => {
@@ -19,7 +20,7 @@ const dataReducer = (state = initialState, action) => {
         case 'UPDATE_SNACKBAR':
             return {...state, snackbar: action.visible, dataSnackbar: action.dataSnackbar}
         case 'SET_ACTIVE_JOB':
-            return {...state, activePost: action.activePost}
+            return {...state, activePost: action.activePost, numberActivePost: action.numberActivePost}
         case 'UPDATE_ACTIVE_JOB':
             return {...state, activePost: activePost.concat(action.activePost) }        
         case 'REMOVE_INDEX_ACTIVE_JOB':

@@ -12,19 +12,26 @@ import SignUp from '../screen/SignUp';
 import GetPosition from '../screen/GetPosition';
 import Icon from 'react-native-vector-icons/Ionicons';
 import AntDesign from 'react-native-vector-icons/AntDesign';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Entypo from 'react-native-vector-icons/Entypo';
 import {MAIN_COLOR} from '../constants/Constants';
 import HeaderManager from '../components/HeaderManager'
 import React from 'react';
 import {strings} from '../constants/Strings';
-import ActivePost from '../screen/ActivePost'
+import ActivePost from '../screen/ActivePost';
+import JobDetail from '../screen/JobDetail';
+import Profile from '../screen/Profile';
+import Apply from '../screen/Apply';
+import CandidateProfile from '../screen/CandidateProfile'
 import {
   SafeAreaView,
   AsyncStorage,
   Button,
   StatusBar,
   StyleSheet,
-  View
+  View,
+  Animated,
+  Easing
 } from 'react-native';
 import { createStackNavigator, createSwitchNavigator, createAppContainer, createDrawerNavigator, createMaterialTopTabNavigator, MaterialTopTabBar } from 'react-navigation';
 import { createMaterialBottomTabNavigator } from "react-navigation-material-bottom-tabs";
@@ -129,9 +136,6 @@ function SafeAreaMaterialTopTabBar (props) {
 const ManagerTab = createMaterialTopTabNavigator ({
   ActivePost: {
     screen: ActivePost,
-    navigationOptions: {
-      tabBarLabel: 'Đang hoạt động',
-    }
   },
   InActivePost: {
     screen: SignInScreen,
@@ -144,14 +148,14 @@ const ManagerTab = createMaterialTopTabNavigator ({
   tabBarAccessibilityLabel: true,
   tabBarComponent: SafeAreaMaterialTopTabBar
 })
-const BottomTab = createMaterialBottomTabNavigator({
 
+const BottomTab = createMaterialBottomTabNavigator({
   Manager: {
     screen: ManagerTab,
     navigationOptions: {
         tabBarLabel: 'Quản lý',
         tabBarIcon: ({ tintColor }) => (
-                <AntDesign style={{color: tintColor }} name="bars" size={25} />
+                <AntDesign style={{color: tintColor }} name="bars" size={26} />
         ),
     }},
   Alert: {
@@ -159,7 +163,7 @@ const BottomTab = createMaterialBottomTabNavigator({
     navigationOptions: {
         tabBarLabel: 'Thông báo',
         tabBarIcon: ({ tintColor }) => (
-                <Icon style={{color: tintColor }} name="md-notifications-outline" size={25} />
+                <Icon style={{color: tintColor }} name="md-notifications-outline" size={26} />
             
         ),
     },
@@ -171,7 +175,7 @@ const BottomTab = createMaterialBottomTabNavigator({
         tabBarLabel: 'Nhắn tin',
         tabBarIcon: ({ tintColor }) => (
             
-                <Entypo style={{color: tintColor }} name="message" size={25} />
+                <Entypo style={{color: tintColor }} name="message" size={26} />
             
         ),
     },
@@ -182,7 +186,7 @@ const BottomTab = createMaterialBottomTabNavigator({
     navigationOptions: {
         tabBarLabel: 'Hồ sơ đã lưu',
         tabBarIcon: ({ tintColor }) => (
-                <AntDesign style={{color: tintColor }} name="filetext1" size={25} />
+                <MaterialCommunityIcons style={{color: tintColor }} name="file-document-outline" size={26} />
         ),
     },
     
@@ -195,7 +199,13 @@ const BottomTab = createMaterialBottomTabNavigator({
   shifting: true,
   labeled: true,
 });
-const AppStack = createStackNavigator({ BottomTab: BottomTab, Home: HomeScreen }, { headerMode: 'none' });
+const AppStack = createStackNavigator({ BottomTab: BottomTab, Home: HomeScreen, JobDetail: JobDetail, Profile: Profile, Apply:  Apply, CandidateProfile: CandidateProfile}, { headerMode: 'none', transitionConfig : () => ({
+	transitionSpec: {
+		duration: 0,
+		timing: Animated.timing,
+		easing: Easing.step0,
+	},
+}), });
 const AuthStack = createStackNavigator({ Welcome: Welcome, SignIn: Login, ForgotPassword: ForgotPassword, SignUp: SignUp, GetPosition: GetPosition },
   {
       initialRouteName: 'Welcome',

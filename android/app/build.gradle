@@ -132,7 +132,7 @@ android {
         applicationId "com.demo"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 1
+        versionCode 9
         versionName "1.0"
     }
     splits {
@@ -198,9 +198,6 @@ android {
 }
 
 dependencies {
-    implementation project(':@react-native-community_async-storage')
-    implementation project(':react-native-version-number')
-    implementation project(':@react-native-community_geolocation')
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation "com.facebook.react:react-native:+"  // From node_modules
     implementation(project(':react-native-maps')){

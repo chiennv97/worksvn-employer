@@ -139,10 +139,10 @@ class SignUp extends Component {
                         onPress={() => this.onSubmit()}
                       />
                     </View>
-                    <View style={{ alignItems: 'center', margin: 10 * SCALE_PADDING_OR_MARGIN }}>
+                    {/* <View style={{ alignItems: 'center', margin: 10 * SCALE_PADDING_OR_MARGIN }}>
                       <Text>- - - - - - - - - - - Hoặc - - - - - - - - - - -</Text>
-                    </View>
-                    <View style={{ margin: 10 * SCALE_PADDING_OR_MARGIN }}>
+                    </View> */}
+                    {/* <View style={{ margin: 10 * SCALE_PADDING_OR_MARGIN }}>
                       <Button
                         title="Đăng Nhập với Facebook"
                         icon={
@@ -160,7 +160,7 @@ class SignUp extends Component {
                           fontSize: 20
                         }}
                       />
-                    </View>
+                    </View> */}
                     <View style={styles.haveAccount}>
                       <Text>Đã có tài khoản?</Text>
                       <Text style={{ paddingLeft: 10, color: '#e62e00' }}>Đăng nhập</Text>

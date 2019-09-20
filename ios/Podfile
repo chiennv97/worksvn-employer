@@ -27,19 +27,15 @@ target 'demo' do
   pod 'DoubleConversion', :podspec => '../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec'
   pod 'glog', :podspec => '../node_modules/react-native/third-party-podspecs/glog.podspec'
   pod 'Folly', :podspec => '../node_modules/react-native/third-party-podspecs/Folly.podspec'
-  pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
 
   rn_maps_path = '../node_modules/react-native-maps'
   pod 'react-native-google-maps', :path => rn_maps_path
   pod 'GoogleMaps'
   pod 'Google-Maps-iOS-Utils'
-  pod 'react-native-geolocation', :path => '../node_modules/@react-native-community/geolocation'
 
 
 
-  pod 'react-native-version-number', :path => '../node_modules/react-native-version-number'
 
-  pod 'RNCAsyncStorage', :path => '../node_modules/@react-native-community/async-storage'
 
   target 'demoTests' do
     inherit! :search_paths

@@ -28,23 +28,11 @@ export default class HeaderManager extends Component {
                         color='#ffffff'
                     />
                 </TouchableOpacity>
-                <View style={{ flex: 1, alignItems: 'center', }}>
+                <View style={{ flex: 1, alignItems: 'flex-start', marginLeft: 10 * SCALE_RATIO }}>
                     <Text
                         style={styles.headerText}
                     >{bodyTitle}</Text>
                 </View>
-                <TouchableOpacity
-                    transparent
-                    onPress={onPressRight}
-                    style={{ paddingLeft: 22 * SCALE_RATIO, paddingRight: 22 * SCALE_RATIO }}
-                >
-                    <MaterialIcons
-                        name={iconRight}
-                        // style={{ width: 19 * SCALE_RATIO, height: 32 * SCALE_RATIO }}
-                        size={53 * SCALE_RATIO}
-                        color='#ffffff'
-                    />
-                </TouchableOpacity>
             </View>
         );
     }
@@ -53,13 +41,13 @@ export default class HeaderManager extends Component {
 const styles = StyleSheet.create({
     container: {
         backgroundColor: MAIN_COLOR,
-        justifyContent: 'center',
+       
         alignItems: 'center',
         flexDirection: 'row',
         height: 90  * SCALE_RATIO
     },
     headerText: {
-        alignSelf: 'center',
+        alignSelf: 'flex-start',
         fontSize: 34 * SCALE_RATIO,
         // fontWeight: 'bold',
         fontStyle: 'normal',

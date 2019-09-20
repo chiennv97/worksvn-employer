@@ -40,7 +40,7 @@ class ItemPost extends Component {
                     })
                     .catch((err) => {console.log(err)})
                     }} text={this.props.data.hidden ? 'Hiện bài đăng' : 'Ẩn bài đăng'} />
-                  <MenuOption onSelect={() => {
+                  {this.props.active ? <MenuOption onSelect={() => {
                     extendPost(this, this.props.token, this.props.data.id)
                     .then((data) => {
                       this.props.data.timeLeft = data.data.timeLeft;
@@ -48,7 +48,8 @@ class ItemPost extends Component {
                       this.forceUpdate();
                     })
                     .catch(() => {console.log(err)})
-                  }} text='Gia hạn thêm' />
+                  }} text='Gia hạn thêm' /> : null}
+                  
                   <MenuOption onSelect={() => {
                     removePost(this, this.props.token, this.props.data.id)
                     .then(() => {

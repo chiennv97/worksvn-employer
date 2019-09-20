@@ -22,7 +22,12 @@ import ActivePost from '../screen/ActivePost';
 import JobDetail from '../screen/JobDetail';
 import Profile from '../screen/Profile';
 import Apply from '../screen/Apply';
-import CandidateProfile from '../screen/CandidateProfile'
+import CandidateProfile from '../screen/CandidateProfile';
+import CandidateProfileSaved from '../screen/CandidateProfileSaved'
+import Notifycation from '../screen/Notifycation';
+import ViewRating from '../screen/ViewRating';
+import SaveProfile from '../screen/SaveProfile';
+import ExpiredPost from '../screen/ExpiredPost';
 import {
   SafeAreaView,
   AsyncStorage,
@@ -31,7 +36,8 @@ import {
   StyleSheet,
   View,
   Animated,
-  Easing
+  Easing,
+  Text
 } from 'react-native';
 import { createStackNavigator, createSwitchNavigator, createAppContainer, createDrawerNavigator, createMaterialTopTabNavigator, MaterialTopTabBar } from 'react-navigation';
 import { createMaterialBottomTabNavigator } from "react-navigation-material-bottom-tabs";
@@ -45,7 +51,7 @@ class SignInScreen extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-        <Button title="Sign in!" onPress={this._signInAsync} />
+        <Text>Đang phát triển</Text>
       </View>
     );
   }
@@ -138,15 +144,12 @@ const ManagerTab = createMaterialTopTabNavigator ({
     screen: ActivePost,
   },
   InActivePost: {
-    screen: SignInScreen,
-    navigationOptions: {
-      tabBarLabel: 'Đã hết hạn',
-    }
+    screen: ExpiredPost
   },
   
 }, {
   tabBarAccessibilityLabel: true,
-  tabBarComponent: SafeAreaMaterialTopTabBar
+  tabBarComponent: SafeAreaMaterialTopTabBar,
 })
 
 const BottomTab = createMaterialBottomTabNavigator({
@@ -159,7 +162,7 @@ const BottomTab = createMaterialBottomTabNavigator({
         ),
     }},
   Alert: {
-    screen: SignInScreen,
+    screen: Notifycation,
     navigationOptions: {
         tabBarLabel: 'Thông báo',
         tabBarIcon: ({ tintColor }) => (
@@ -182,7 +185,7 @@ const BottomTab = createMaterialBottomTabNavigator({
     
   },
   ProfileSaved: {
-    screen: SignInScreen,
+    screen: SaveProfile,
     navigationOptions: {
         tabBarLabel: 'Hồ sơ đã lưu',
         tabBarIcon: ({ tintColor }) => (
@@ -199,7 +202,7 @@ const BottomTab = createMaterialBottomTabNavigator({
   shifting: true,
   labeled: true,
 });
-const AppStack = createStackNavigator({ BottomTab: BottomTab, Home: HomeScreen, JobDetail: JobDetail, Profile: Profile, Apply:  Apply, CandidateProfile: CandidateProfile}, { headerMode: 'none', transitionConfig : () => ({
+const AppStack = createStackNavigator({ BottomTab: BottomTab, Home: HomeScreen, JobDetail: JobDetail, Profile: Profile, Apply:  Apply, CandidateProfile: CandidateProfile, ViewRating: ViewRating, CandidateProfileSaved: CandidateProfileSaved}, { headerMode: 'none', transitionConfig : () => ({
 	transitionSpec: {
 		duration: 0,
 		timing: Animated.timing,

@@ -127,7 +127,7 @@ class ActivePost extends Component {
                 <FlatList
                     data={this.props.activePost}
                     keyExtractor={(item, index) => index}
-                    renderItem={({ item, index }) => <ItemPost data={item} nav={this.props.navigation} index={index} token={this.props.accessToken} />}
+                    renderItem={({ item, index }) => <ItemPost data={item} nav={this.props.navigation} index={index} token={this.props.accessToken} active={true}/>}
                     ListFooterComponent={this.renderFooter}
                     onEndReached={this.handleLoadMore}
                     onEndReachedThreshold={0.5}
@@ -141,12 +141,6 @@ class ActivePost extends Component {
                 <Snackbar
                     visible={this.props.visible}
                     onDismiss={() => this.props.updateSnackbar(false, null)}
-                    action={{
-                    label: 'OK',
-                    onPress: () => {
-                        // Do something
-                    },
-                    }}
                 >
                     {this.props.dataSnackbar}
                 </Snackbar>

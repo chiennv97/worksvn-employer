@@ -6,25 +6,24 @@ import Foundation from 'react-native-vector-icons/Foundation';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { Rating } from 'react-native-elements';
 import { View, ActivityIndicator, ScrollView, Image,
-  StyleSheet, Dimensions, Text, PixelRatio, SafeAreaView, StatusBar, TouchableOpacity } from 'react-native';
+  StyleSheet, Dimensions, Text, PixelRatio, SafeAreaView, StatusBar } from 'react-native';
 import HeaderScreenDetail from '../components/HeaderScreenDetail';
 import { SCALE_PADDING_OR_MARGIN,
   SCALE_BORDER, SUB_COLOR, BACKGROUND_COLOR, ICON_COLOR, MAIN_COLOR, NEW_SCALE_RATIO } from '../constants/Constants';
 import {BASE_URL} from '../constants/Url'
 const { height, width } = Dimensions.get('window');
-import {getCandidateProfile, changeStateCandidate, saveCandidate} from '../function/ProfileFunc';
+import {getCandidateProfileSaved, changeStateCandidate} from '../function/ProfileFunc';
 import { connect } from 'react-redux';
-import {removeSaveCandidate, getSaveCandidates} from '../function/PostFunc'
 import {formatDate} from '../utils/dateUtils'
 import { Chip } from 'react-native-paper';
 import ActionButton from 'react-native-action-button';
 import { Snackbar } from 'react-native-paper';
-import * as PostAction from '../action/PostAction';
-class CandidateProfile extends Component {
+
+class CandidateProfileSaved extends Component {
   constructor(props) {
     super(props);
     this.state = { isLoading: true, map: [], location: '',open: false, visible: false, titleSnackbar: '' };
-    getCandidateProfile(this.props.accessToken,  this.props.navigation.getParam('jid', 'null'),  this.props.navigation.getParam('cid', 'null'))
+    getCandidateProfileSaved(this.props.accessToken,  this.props.navigation.getParam('id', 'null'))
       .then((data) => this.setState({
         isLoading: false,
         data: data,
@@ -34,14 +33,14 @@ class CandidateProfile extends Component {
   render() {
     if (this.state.isLoading) {
       return (
-          <React.Fragment>
+        <React.Fragment>
             <SafeAreaView style={{ flex:0, backgroundColor: MAIN_COLOR }} />
             <StatusBar barStyle="light-content" />
             <SafeAreaView>
-                <HeaderScreenDetail nav={this.props.navigation} title={'Hồ sơ ứng viên'} />
+            <HeaderScreenDetail nav={this.props.navigation} title={'Hồ sơ ứng viên'} />
                 <ActivityIndicator />
             </SafeAreaView>
-            </React.Fragment>  
+        </React.Fragment> 
       );
     }
     const { coverImage, wrapperLine1, logoStyle, wrapperLine4,
@@ -52,53 +51,8 @@ class CandidateProfile extends Component {
             <SafeAreaView style={{ flex:0, backgroundColor: MAIN_COLOR }} />
             <StatusBar barStyle="light-content" />
             <SafeAreaView style={{ flex: 1, backgroundColor: 'white' }}>
-                <View style={styles.wrapper}>
-                  <View style={{flexDirection: 'row'}}>
-                    <TouchableOpacity onPress={() => this.props.navigation.goBack()} >
-                        <MaterialIcons name='keyboard-backspace' color='white' size={27} />
-                    </TouchableOpacity>
-                    <Text style={styles.titleStyle}>Hồ sơ ứng viên</Text>
-                  </View>
-                  {this.state.data.isSave ? 
-                      <TouchableOpacity onPress={() => {
-                        removeSaveCandidate(this.props.accessToken, this.props.navigation.getParam('cid', 'null'))
-                        .then(() => {
-                          this.setState({visible: true, titleSnackbar: 'Xoá hồ sơ thành công'});
-                          getSaveCandidates(this, this.props.accessToken, 0)
-                            .then(listJobs => {
-                                this.props.setSaveCandidates(listJobs.items)
-                                this.state.data.isSave = false;
-                                this.forceUpdate();
-                            })
-                            .catch(() => {
-                                console.log('fail to get searchStudent');
-                            });
-                        })
-                        .catch((e) => {console.log(e)})
-                      }} >
-                          <Icon name='bookmark' color='white' size={27} />
-                      </TouchableOpacity> :
-                      <TouchableOpacity onPress={() => {
-                        saveCandidate(this.props.accessToken, this.props.navigation.getParam('cid', 'null'))
-                        .then(() => {
-                          this.setState({visible: true, titleSnackbar: 'Lưu hồ sơ thành công'});
-                          getSaveCandidates(this, this.props.accessToken, 0)
-                            .then(listJobs => {
-                                this.props.setSaveCandidates(listJobs.items)
-                                this.state.data.isSave = true;
-                                this.forceUpdate();
-                            })
-                            .catch(() => {
-                                console.log('fail to get searchStudent');
-                            });
-                        })
-                        .catch((e) => {console.log(e)})
-                      }} >
-                          <Icon name='bookmark-o' color='white' size={27} />
-                      </TouchableOpacity>
-                  }
                   
-                </View>
+                <HeaderScreenDetail nav={this.props.navigation} title={'Hồ sơ ứng viên'} />
                 <ScrollView style={{flex:1}}>
                   <View style={{ backgroundColor: BACKGROUND_COLOR }}>
                       <Image
@@ -321,58 +275,6 @@ class CandidateProfile extends Component {
                         
                   </View>
                 </ScrollView>
-                {this.state.data.status === 'PENDING' ? 
-                <ActionButton buttonColor="#ff0066">
-                      <ActionButton.Item buttonColor='#33cc33' title="Chấp nhận hồ sơ" onPress={() => {
-                        changeStateCandidate(this.props.accessToken,  this.props.navigation.getParam('jid', 'null'),  this.props.navigation.getParam('cid', 'null'), 'ACCEPTED')
-                        .then((data) => {this.setState({visible: true, titleSnackbar: 'Hồ sơ đã được chấp nhận'})
-                        this.state.data.status = 'ACCEPTED';
-                        this.forceUpdate();
-                      })
-                        .catch((err) => console.log(err))
-                      }}>
-                        <MaterialCommunityIcons name="check" style={styles.actionButtonIcon} />
-                      </ActionButton.Item>
-                      <ActionButton.Item buttonColor='#ff0000' title="Từ chối hồ sơ" onPress={() => {
-                        changeStateCandidate(this.props.accessToken,  this.props.navigation.getParam('jid', 'null'),  this.props.navigation.getParam('cid', 'null'), 'REJECTED')
-                        .then((data) => {this.setState({visible: true, titleSnackbar: 'Đã từ chối hồ sơ'})
-                        this.state.data.status = 'REJECTED';
-                        this.forceUpdate();
-                      })
-                        .catch((err) => console.log(err))
-                      }}>
-                        <MaterialIcons name="do-not-disturb-alt" style={styles.actionButtonIcon} />
-                      </ActionButton.Item>
-                </ActionButton> 
-                : null}
-                {this.state.data.status === 'REJECTED' ? 
-                <ActionButton buttonColor="#ff0066">
-                      <ActionButton.Item buttonColor='#33cc33' title="Chấp nhận hồ sơ" onPress={() => {
-                        changeStateCandidate(this.props.accessToken,  this.props.navigation.getParam('jid', 'null'),  this.props.navigation.getParam('cid', 'null'), 'ACCEPTED')
-                        .then((data) => {this.setState({visible: true, titleSnackbar: 'Hồ sơ đã được chấp nhận'})
-                        this.state.data.status = 'ACCEPTED';
-                        this.forceUpdate();
-                      })
-                        .catch((err) => console.log(err))
-                      }}>
-                        <MaterialCommunityIcons name="check" style={styles.actionButtonIcon} />
-                      </ActionButton.Item>
-                </ActionButton> 
-                : null}
-                {this.state.data.status === 'ACCEPTED' ? 
-                <ActionButton buttonColor="#ff0066">
-                      <ActionButton.Item buttonColor='#ff0000' title="Từ chối hồ sơ" onPress={() => {
-                        changeStateCandidate(this.props.accessToken,  this.props.navigation.getParam('jid', 'null'),  this.props.navigation.getParam('cid', 'null'), 'REJECTED')
-                        .then((data) => {this.setState({visible: true, titleSnackbar: 'Đã từ chối hồ sơ'})
-                        this.state.data.status = 'REJECTED';
-                        this.forceUpdate();
-                      })
-                        .catch((err) => console.log(err))
-                      }}>
-                        <MaterialIcons name="do-not-disturb-alt" style={styles.actionButtonIcon} />
-                      </ActionButton.Item>
-                </ActionButton> 
-                : null}
                 <Snackbar
                   visible={this.state.visible}
                   onDismiss={() => this.setState({ visible: false })}
@@ -444,17 +346,11 @@ const styles = StyleSheet.create({
     height: 22,
     color: 'white',
   },
-  wrapper: {
-    height: height / 14,
-    backgroundColor: MAIN_COLOR,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    padding: 10 },
-  titleStyle: { color: '#FFF', paddingLeft: 10, fontSize: 18, fontWeight: 'bold' }
+
 });
 function mapStateToProps(state) {
     return {
         accessToken: state.token.accessToken,
     };
 }
-export default connect(mapStateToProps, PostAction)(CandidateProfile);
+export default connect(mapStateToProps)(CandidateProfileSaved);

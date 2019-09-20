@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import { View, FlatList, StatusBar, ActivityIndicator, StyleSheet, SafeAreaView, Easing, Animated } from 'react-native';
 import { connect } from 'react-redux';
-import ItemPreviewCandidate from '../components/ItemPreviewCandidate';
+import ItemViewRating from '../components/ItemViewRating';
 import { NEW_SCALE_RATIO, MAIN_COLOR } from '../constants/Constants';
-import {getApplyJobs} from '../function/PostFunc';
+import {getRating} from '../function/PostFunc';
 import * as PostAction from '../action/PostAction';
 import HeaderScreenDetail from '../components/HeaderScreenDetail';
-class Apply extends Component {
+class ViewRating extends Component {
   constructor(props) {
     super(props);
       this.state = {
@@ -22,7 +22,7 @@ class Apply extends Component {
   }
   componentDidMount() {
 
-    getApplyJobs(this, this.props.accessToken, 0, this.props.navigation.getParam('id', 'null'))
+    getRating(this, this.props.accessToken, 0)
               .then(listJobs => {
                   this.listJobs = listJobs.items;
                   var currentPage = this.state.page + 1;
@@ -42,7 +42,7 @@ class Apply extends Component {
   handleLoadMore = () => {
       if (this.state.outOfData || this.state.loadingMore) return;
       this.setState({ loadingMore: true });
-      getApplyJobs(this, this.props.accessToken, this.state.page, this.props.navigation.getParam('id', 'null'))
+      getRating(this, this.props.accessToken, this.state.page)
               .then(listJobs => {
                   var currentPage = this.state.page + 1;
                 //   let newListJobs = this.props.activePost.concat(listJobs.items);
@@ -61,7 +61,7 @@ class Apply extends Component {
   };
   refreshList = () => {
         this.setState({refreshing: true, page: 0});
-        getApplyJobs(this, this.props.accessToken, 0, this.props.navigation.getParam('id', 'null'))
+        getRating(this, this.props.accessToken, 0)
                 .then(listJobs => {
                     this.setState({refreshing: true});
                     this.listJobs = [];
@@ -110,14 +110,9 @@ class Apply extends Component {
   render() {
     if (this.state.isLoading) {
       return (
-        <React.Fragment>
-            <SafeAreaView style={{ flex:0, backgroundColor: MAIN_COLOR }} />
-            <StatusBar barStyle="light-content" />
-            <SafeAreaView>
-                <HeaderScreenDetail nav={this.props.navigation} title={'Danh sách ứng tuyển'} />
-                <ActivityIndicator />
-            </SafeAreaView>
-        </React.Fragment> 
+        <View style={{ flex: 1 }}>
+          <ActivityIndicator />
+        </View>
       );
     }
     return (
@@ -125,11 +120,11 @@ class Apply extends Component {
             <SafeAreaView style={{ flex:0, backgroundColor: MAIN_COLOR }} />
             <StatusBar barStyle="light-content" />
             <SafeAreaView style={{ flex: 1, backgroundColor: 'white' }}>
-                <HeaderScreenDetail nav={this.props.navigation} title={'Danh sách ứng tuyển'} />
+            <HeaderScreenDetail nav={this.props.navigation} title={'Xem đánh giá'} />
                 <FlatList
                         data={this.listJobs}
                         keyExtractor={(item, index) => index}
-                        renderItem={({ item, index }) => <ItemPreviewCandidate data={item}  jid={this.props.navigation.getParam('id', 'null')} nav={this.props.navigation} index={index} token={this.props.accessToken} />}
+                        renderItem={({ item, index }) => <ItemViewRating data={item}  jid={this.props.navigation.getParam('id', 'null')} nav={this.props.navigation} index={index} token={this.props.accessToken} />}
                         ListFooterComponent={this.renderFooter}
                         onEndReached={this.handleLoadMore}
                         onEndReachedThreshold={0.5}
@@ -168,4 +163,4 @@ function mapStateToProps(state) {
         signin: state.token.signin,
     };
 }
-export default connect(mapStateToProps, PostAction)(Apply);
+export default connect(mapStateToProps, PostAction)(ViewRating);

@@ -817,7 +817,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = org.reactjs.native.example.demo;
+				PRODUCT_BUNDLE_IDENTIFIER = org.reactjs.native.example.worksvnemployer;
 				PRODUCT_NAME = demo;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
@@ -838,7 +838,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = org.reactjs.native.example.demo;
+				PRODUCT_BUNDLE_IDENTIFIER = org.reactjs.native.example.worksvnemployer;
 				PRODUCT_NAME = demo;
 				VERSIONING_SYSTEM = "apple-generic";
 			};

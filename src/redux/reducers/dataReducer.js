@@ -8,7 +8,11 @@ const initialState = {
     snackbar: false,
     dataSnackbar: null,
     activePost: null,
-    numberActivePost: 0
+    numberActivePost: 0,
+    activePost: null,
+    numberExpiredPost: 0,
+    expiredPost: null,
+    savedCandidates: null
 };
 
 const dataReducer = (state = initialState, action) => {
@@ -21,10 +25,14 @@ const dataReducer = (state = initialState, action) => {
             return {...state, snackbar: action.visible, dataSnackbar: action.dataSnackbar}
         case 'SET_ACTIVE_JOB':
             return {...state, activePost: action.activePost, numberActivePost: action.numberActivePost}
+        case 'SET_EXPIRED_JOB':
+            return {...state, expiredPost: action.expiredPost, numberExpiredPost: action.numberExpiredPost}
         case 'UPDATE_ACTIVE_JOB':
             return {...state, activePost: activePost.concat(action.activePost) }        
         case 'REMOVE_INDEX_ACTIVE_JOB':
-            return {...state, activePost: action.activePost}      
+            return {...state, activePost: action.activePost}
+        case 'SET_SAVED_CANDIDATES':
+            return {...state, savedCandidates: action.savedCandidates}        
         default:
             return state;
     }

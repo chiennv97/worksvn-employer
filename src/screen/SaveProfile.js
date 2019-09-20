@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
 import { View, FlatList, StatusBar, ActivityIndicator, StyleSheet, SafeAreaView, Easing, Animated } from 'react-native';
 import { connect } from 'react-redux';
-import ItemPreviewCandidate from '../components/ItemPreviewCandidate';
+import ItemSaveCandidate from '../components/ItemSaveCandidate';
 import { NEW_SCALE_RATIO, MAIN_COLOR } from '../constants/Constants';
-import {getApplyJobs} from '../function/PostFunc';
+import {getSaveCandidates} from '../function/PostFunc';
 import * as PostAction from '../action/PostAction';
-import HeaderScreenDetail from '../components/HeaderScreenDetail';
-class Apply extends Component {
+import HeaderManager from '../components/HeaderManager';
+import { Snackbar } from 'react-native-paper';
+class SaveProfile extends Component {
   constructor(props) {
     super(props);
       this.state = {
@@ -22,14 +23,22 @@ class Apply extends Component {
   }
   componentDidMount() {
 
-    getApplyJobs(this, this.props.accessToken, 0, this.props.navigation.getParam('id', 'null'))
+    getSaveCandidates(this, this.props.accessToken, 0)
               .then(listJobs => {
-                  this.listJobs = listJobs.items;
+                //   this.listJobs = listJobs.items;
+                  this.props.setSaveCandidates(listJobs.items)
                   var currentPage = this.state.page + 1;
-                  this.setState({isLoading: false,
-                      loadingMore: false,
-                      outOfData: false,
-                      page: currentPage }); 
+                  if(listJobs.totalItems > 10){
+                    this.setState({isLoading: false,
+                        loadingMore: false,
+                        outOfData: false,
+                        page: currentPage }); 
+                  } else {
+                    this.setState({isLoading: false,
+                        loadingMore: false,
+                        outOfData: true,
+                        page: currentPage }); 
+                  }
               })
               .catch(() => {
                   console.log('fail to get searchStudent');
@@ -42,14 +51,14 @@ class Apply extends Component {
   handleLoadMore = () => {
       if (this.state.outOfData || this.state.loadingMore) return;
       this.setState({ loadingMore: true });
-      getApplyJobs(this, this.props.accessToken, this.state.page, this.props.navigation.getParam('id', 'null'))
+      getSaveCandidates(this, this.props.accessToken, this.state.page)
               .then(listJobs => {
                   var currentPage = this.state.page + 1;
-                //   let newListJobs = this.props.activePost.concat(listJobs.items);
-                //   this.props.setActivePost(newListJobs, listJobs.totalItems);
-                this.listJobs = this.listJobs.concat(listJobs.items);
+                  let newListJobs = this.props.savedCandidates.concat(listJobs.items);
+                  this.props.setSaveCandidates(newListJobs);
+                  console.log('vao handleLoadMore')
                   this.setState({loadingMore: false });
-                  if (listJobs.length === 0) {
+                  if (listJobs.items.length === 0) {
                       this.setState({outOfData: true});
                   } else {
                       this.setState({page: currentPage});
@@ -61,12 +70,12 @@ class Apply extends Component {
   };
   refreshList = () => {
         this.setState({refreshing: true, page: 0});
-        getApplyJobs(this, this.props.accessToken, 0, this.props.navigation.getParam('id', 'null'))
+        getSaveCandidates(this, this.props.accessToken, 0)
                 .then(listJobs => {
                     this.setState({refreshing: true});
-                    this.listJobs = [];
-                    this.listJobs = listJobs.items;
-                    // this.props.setActivePost(listJobs.items, listJobs.totalItems);
+                    // this.listJobs = [];
+                    // this.listJobs = listJobs.items;
+                    this.props.setSaveCandidates(listJobs.items);
                     this.setState({
                         isLoading: false,
                         loadingMore: false,
@@ -114,7 +123,13 @@ class Apply extends Component {
             <SafeAreaView style={{ flex:0, backgroundColor: MAIN_COLOR }} />
             <StatusBar barStyle="light-content" />
             <SafeAreaView>
-                <HeaderScreenDetail nav={this.props.navigation} title={'Danh sách ứng tuyển'} />
+            <HeaderManager
+                        bodyTitle={'Hồ sơ đã lưu'}
+                        onPress={() => {
+                        this.props.navigation.toggleDrawer(); 
+                        }}
+                        iconLeft={'menu'}
+                />
                 <ActivityIndicator />
             </SafeAreaView>
         </React.Fragment> 
@@ -125,11 +140,17 @@ class Apply extends Component {
             <SafeAreaView style={{ flex:0, backgroundColor: MAIN_COLOR }} />
             <StatusBar barStyle="light-content" />
             <SafeAreaView style={{ flex: 1, backgroundColor: 'white' }}>
-                <HeaderScreenDetail nav={this.props.navigation} title={'Danh sách ứng tuyển'} />
+                <HeaderManager
+                        bodyTitle={'Hồ sơ đã lưu'}
+                        onPress={() => {
+                        this.props.navigation.toggleDrawer(); 
+                        }}
+                        iconLeft={'menu'}
+                />
                 <FlatList
-                        data={this.listJobs}
+                        data={this.props.savedCandidates}
                         keyExtractor={(item, index) => index}
-                        renderItem={({ item, index }) => <ItemPreviewCandidate data={item}  jid={this.props.navigation.getParam('id', 'null')} nav={this.props.navigation} index={index} token={this.props.accessToken} />}
+                        renderItem={({ item, index }) => <ItemSaveCandidate data={item}  id={this.props.navigation.getParam('id', 'null')} nav={this.props.navigation} index={index} token={this.props.accessToken} />}
                         ListFooterComponent={this.renderFooter}
                         onEndReached={this.handleLoadMore}
                         onEndReachedThreshold={0.5}
@@ -140,6 +161,12 @@ class Apply extends Component {
                         removeClippedSubviews={true}
 
                     />
+                <Snackbar
+                    visible={this.props.visible}
+                    onDismiss={() => this.props.updateSnackbar(false, null)}
+                >
+                    {this.props.dataSnackbar}
+                </Snackbar>    
             </SafeAreaView>
         </React.Fragment>
     );
@@ -166,6 +193,7 @@ function mapStateToProps(state) {
         visible: state.data.snackbar,
         dataSnackbar: state.data.dataSnackbar,
         signin: state.token.signin,
+        savedCandidates: state.data.savedCandidates
     };
 }
-export default connect(mapStateToProps, PostAction)(Apply);
+export default connect(mapStateToProps, PostAction)(SaveProfile);

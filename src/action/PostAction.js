@@ -14,6 +14,13 @@ export function setActivePost(listJobs, numberActivePost) {
         });
     };
 }
+export function setExpiredPost(listJobs, numberExpiredPost) {
+    return (dispatch) => {
+        dispatch({
+            type: 'SET_EXPIRED_JOB', expiredPost: listJobs, numberExpiredPost: numberExpiredPost
+        });
+    };
+}
 export function updateActivePost(listJobs) {
     return (dispatch) => {
         dispatch({
@@ -25,6 +32,13 @@ export function removeIndexActivePost( activePost) {
     return (dispatch) => {
         dispatch({
             type: 'REMOVE_INDEX_ACTIVE_JOB', activePost: activePost
+        });
+    };
+}
+export function setSaveCandidates(listCandidates) {
+    return (dispatch) => {
+        dispatch({
+            type: 'SET_SAVED_CANDIDATES', savedCandidates: listCandidates
         });
     };
 }

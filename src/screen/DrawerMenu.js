@@ -66,10 +66,10 @@ class Menu extends Component {
                         </View>
                     </TouchableOpacity>
                     {/* view check */}
-                    <TouchableOpacity style={styles.funcTab} onPress={() => { }}>
+                    <TouchableOpacity style={styles.funcTab} onPress={() => {this.props.navigation.navigate('ViewRating')}}>
                         <MaterialIcons
                         name='rate-review'
-                        size={20 * NEW_SCALE_RATIO}
+                        size={16 * NEW_SCALE_RATIO}
                         style={styles.icon}
                         />
                         <View style={styles.funcContent}>
@@ -77,7 +77,7 @@ class Menu extends Component {
                         </View>
                     </TouchableOpacity>
                     {/* Lich sử ứng tuyển */}
-                    <TouchableOpacity style={styles.funcTab} onPress={() => { }}>
+                    {/* <TouchableOpacity style={styles.funcTab} onPress={() => { }}>
                         <MaterialCommunityIcons
                         name='history'
                         size={20 * NEW_SCALE_RATIO}
@@ -86,9 +86,9 @@ class Menu extends Component {
                         <View style={styles.funcContent}>
                         <Text style={styles.funcName}>{strings.history}</Text>
                         </View>
-                    </TouchableOpacity>
+                    </TouchableOpacity> */}
                     {/* change pass */}
-                    <TouchableOpacity style={styles.funcTab} onPress={() => {this.props.navigation.navigate(ROUTE_KEY.CHANGE_PASSWORD)}}>
+                    {/* <TouchableOpacity style={styles.funcTab} onPress={() => {this.props.navigation.navigate(ROUTE_KEY.CHANGE_PASSWORD)}}>
                         <MaterialCommunityIcons
                         name='lock-reset'
                         size={20 * NEW_SCALE_RATIO}
@@ -97,9 +97,9 @@ class Menu extends Component {
                         <View style={styles.funcContent}>
                         <Text style={styles.funcName}>{strings.change_pass}</Text>
                         </View>
-                    </TouchableOpacity>
+                    </TouchableOpacity> */}
                     {/* Test MBTI */}
-                    <TouchableOpacity style={styles.funcTabEnd} onPress={() => { }}>
+                    {/* <TouchableOpacity style={styles.funcTabEnd} onPress={() => { }}>
                         <MaterialCommunityIcons
                         name='checkbox-multiple-marked-outline'
                         size={20 * NEW_SCALE_RATIO}
@@ -108,26 +108,8 @@ class Menu extends Component {
                         <View style={styles.funcContent}>
                         <Text style={styles.funcName}>{strings.test}</Text>
                         </View>
-                    </TouchableOpacity>
-                    </View>
+                    </TouchableOpacity> */}
                     
-
-                <View style={styles.title}>
-                    <Text style={[styles.titleFuncName]}>{strings.other}</Text>
-                </View>
-                <TouchableOpacity style={styles.funcTab}>
-                    <Entypo
-                    name='share'
-                    size={18 * NEW_SCALE_RATIO}
-                    style={styles.icon}
-                    />
-                    <View style={styles.funcContent}>
-                    <Text style={styles.funcName} >{strings.share}</Text>
-                    </View>
-                </TouchableOpacity>
-
-                {this.props.signin ?
-                    <View>
                     <TouchableOpacity
                         style={styles.funcTab}
                         onPress={() => { this.props.logout(this) }}
@@ -143,9 +125,23 @@ class Menu extends Component {
                         <Text style={styles.funcName}>{strings.logout}</Text>
                         </View>
                     </TouchableOpacity>
+                  
                     </View>
-                    : null
-                }
+                    
+
+                {/* <View style={styles.title}>
+                    <Text style={[styles.titleFuncName]}>{strings.other}</Text>
+                </View>
+                <TouchableOpacity style={styles.funcTab}>
+                    <Entypo
+                    name='share'
+                    size={18 * NEW_SCALE_RATIO}
+                    style={styles.icon}
+                    />
+                    <View style={styles.funcContent}>
+                    <Text style={styles.funcName} >{strings.share}</Text>
+                    </View>
+                </TouchableOpacity> */}
                 </View>
             </ScrollView>
         </SafeAreaView>
